@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, ChevronDown, GraduationCap, Briefcase, Award, BookOpen, Building2, Plane, LogIn, Globe, Sun, Moon } from "lucide-react";
+import { Menu, X, ChevronDown, Briefcase, Award, BookOpen, Building2, Plane, LogIn, Globe, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
+import kmrLogo from "@/assets/kmr-logo.png";
 
 function LangSwitcher({ mobile = false }: { mobile?: boolean }) {
   const { lang, setLang } = useT();
@@ -110,10 +111,12 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-navy-deep/95 backdrop-blur-md border-b border-white/10">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex h-16 lg:h-20 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-gold to-magenta flex items-center justify-center">
-              <GraduationCap className="h-6 w-6 text-navy-deep" />
-            </div>
+          <Link to="/" className="flex items-center gap-2.5">
+            <img
+              src={kmrLogo}
+              alt="Karthikeya Educational Society"
+              className="h-10 w-10 rounded-full object-contain bg-white p-0.5 shadow-md"
+            />
             <div className="leading-tight">
               <div className="text-white font-extrabold text-lg tracking-tight">KMR</div>
               <div className="text-gold text-[10px] font-semibold uppercase tracking-widest">Technologies</div>

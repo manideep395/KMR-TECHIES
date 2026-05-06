@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { GraduationCap, Mail, Phone, MapPin, Facebook, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, Instagram } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import kmrLogo from "@/assets/kmr-logo.png";
 
 export function Footer() {
   const { t } = useT();
@@ -11,10 +12,12 @@ export function Footer() {
     <footer className="bg-navy-deep text-white/80">
       <div className="container mx-auto px-4 lg:px-8 py-14 grid gap-10 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-gold to-magenta flex items-center justify-center">
-              <GraduationCap className="h-6 w-6 text-navy-deep" />
-            </div>
+          <div className="flex items-center gap-2.5 mb-4">
+            <img
+              src={kmrLogo}
+              alt="Karthikeya Educational Society"
+              className="h-12 w-12 rounded-full object-contain bg-white p-0.5 shadow-md"
+            />
             <div>
               <div className="text-white font-extrabold">KMR</div>
               <div className="text-gold text-[10px] font-semibold uppercase tracking-widest">Technologies</div>

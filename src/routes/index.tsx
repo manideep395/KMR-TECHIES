@@ -97,7 +97,7 @@ function Home() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/95 via-navy-deep/85 to-navy-deep/40" />
 
-        <div className="relative container mx-auto px-4 lg:px-8 py-20 lg:py-28 grid lg:grid-cols-2 gap-10 items-center">
+        <div className="relative container mx-auto px-4 lg:px-8 py-12 md:py-20 lg:py-28 grid lg:grid-cols-2 gap-10 items-center">
           {/* LEFT — Text */}
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-xs font-semibold border border-white/15">
@@ -108,11 +108,11 @@ function Home() {
               <span className="text-gold">{s.title.split(" ").slice(-1)}</span>
             </h1>
             <p className="text-lg text-white/80 mt-5 max-w-xl">{s.sub}</p>
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link to="/courses/job-guaranteed" className="inline-flex items-center gap-2 rounded-full bg-magenta hover:bg-magenta/90 px-7 py-3.5 font-bold text-white shadow-lg transition">
+            <div className="flex flex-col sm:flex-row gap-3 mt-8">
+              <Link to="/courses/job-guaranteed" className="inline-flex items-center justify-center gap-2 rounded-full bg-magenta hover:bg-magenta/90 px-7 py-3.5 font-bold text-white shadow-lg transition">
                 {t("hero.exploreCourses")} <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/student-login" className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur px-7 py-3.5 font-bold text-white border border-white/20 transition">
+              <Link to="/student-login" className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur px-7 py-3.5 font-bold text-white border border-white/20 transition">
                 {t("nav.studentLogin")}
               </Link>
             </div>
@@ -157,11 +157,11 @@ function Home() {
       </section>
 
       {/* ═══════ MISSION BANNER ═══════ */}
-      <section className="bg-navy-deep py-16 border-b border-white/10">
+      <section className="bg-navy-deep py-12 md:py-16 border-b border-white/10">
         <div className="container mx-auto px-4 lg:px-8 text-center">
           <h2 className="text-3xl md:text-5xl font-extrabold text-white">{t("mission.title")}</h2>
           <p className="text-lg text-white/70 mt-4 max-w-3xl mx-auto">{t("mission.sub")}</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-10 md:mt-12 max-w-4xl mx-auto">
             {[
               { n: "25k+", l: t("stats.learners") },
               { n: "150+", l: t("stats.partners") },
@@ -178,7 +178,7 @@ function Home() {
       </section>
 
       {/* ═══════ GALLERY CAROUSEL ═══════ */}
-      <section id="gallery" className="py-20 overflow-hidden bg-background">
+      <section id="gallery" className="py-12 md:py-20 overflow-hidden bg-background">
         <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-2xl mb-10">
             <div className="text-xs uppercase font-bold tracking-widest text-gold">{t("gallery.eyebrow")}</div>
@@ -219,7 +219,7 @@ function Home() {
       </section>
 
       {/* ═══════ PROGRAM CATEGORIES ═══════ */}
-      <section className="py-20 bg-background">
+      <section className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-2xl mb-12">
             <div className="text-xs uppercase font-bold tracking-widest text-gold">{t("programs.eyebrow")}</div>
@@ -249,7 +249,7 @@ function Home() {
       </section>
 
       {/* ═══════ FEATURED HIGHLIGHTS ═══════ */}
-      <section className="py-20 border-y border-border bg-secondary">
+      <section className="py-12 md:py-20 border-y border-border bg-secondary">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-2xl mb-12">
             <div className="text-xs uppercase font-bold tracking-widest text-gold">{t("highlights.eyebrow")}</div>
@@ -271,7 +271,7 @@ function Home() {
       </section>
 
       {/* ═══════ WHY KMR ═══════ */}
-      <section className="bg-navy-deep py-20 border-y border-white/10">
+      <section className="bg-navy-deep py-12 md:py-20 border-y border-white/10">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-2xl mb-12">
             <div className="text-xs uppercase font-bold tracking-widest text-gold">{t("why.eyebrow")}</div>
@@ -294,7 +294,7 @@ function Home() {
       </section>
 
       {/* ═══════ TESTIMONIALS ═══════ */}
-      <section className="py-20 bg-background">
+      <section className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-2xl mb-10">
             <div className="text-xs uppercase font-bold tracking-widest text-gold">{t("testi.eyebrow")}</div>
@@ -320,14 +320,14 @@ function Home() {
       </section>
 
       {/* ═══════ CTA ═══════ */}
-      <section className="bg-background pb-20">
+      <section className="bg-background pb-12 md:pb-20">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="rounded-3xl bg-gradient-hero p-10 md:p-14 text-white text-center shadow-elegant">
+          <div className="rounded-3xl bg-gradient-hero p-8 md:p-14 text-white text-center shadow-elegant">
             <h2 className="text-3xl md:text-4xl font-extrabold">{t("cta.title")}</h2>
             <p className="text-white/80 mt-3 max-w-xl mx-auto">{t("cta.sub")}</p>
-            <div className="flex flex-wrap justify-center gap-3 mt-7">
-              <Link to="/contact" className="rounded-full bg-magenta hover:bg-magenta/90 px-7 py-3.5 font-bold">{t("cta.talk")}</Link>
-              <Link to="/courses/job-guaranteed" className="rounded-full bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 px-7 py-3.5 font-bold">{t("cta.browse")}</Link>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 mt-7">
+              <Link to="/contact" className="rounded-full bg-magenta hover:bg-magenta/90 px-7 py-3.5 font-bold flex justify-center items-center">{t("cta.talk")}</Link>
+              <Link to="/courses/job-guaranteed" className="rounded-full bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 px-7 py-3.5 font-bold flex justify-center items-center">{t("cta.browse")}</Link>
             </div>
           </div>
         </div>

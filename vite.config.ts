@@ -6,9 +6,4 @@ export default defineConfig({
       allowedHosts: true,
     },
   },
-  tanstackStart: {
-    server: {
-      preset: "netlify",
-    },
-  },
 });

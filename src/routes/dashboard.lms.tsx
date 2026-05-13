@@ -6,54 +6,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { DashThemeToggle } from "@/components/site/DashThemeToggle";
+import { useSharedStore, Course, Lesson } from "@/lib/store";
 
 export const Route = createFileRoute("/dashboard/lms")({
   head: () => ({ meta: [{ title: "LMS Dashboard — KMR Technologies" }] }),
   component: LMSDash,
 });
 
-type Lesson = { title: string; duration: string; done: boolean };
-type Course = { id: string; title: string; track: string; thumb: string; lessons: Lesson[] };
-
-const COURSES: Course[] = [
-  {
-    id: "fsd",
-    title: "Full-Stack Web Development",
-    track: "Job Guaranteed",
-    thumb: "linear-gradient(135deg,#06B6D4,#1E40AF)",
-    lessons: [
-      { title: "JavaScript fundamentals", duration: "32m", done: true },
-      { title: "React state & hooks", duration: "48m", done: true },
-      { title: "Node + Express APIs", duration: "55m", done: true },
-      { title: "MongoDB & Mongoose", duration: "41m", done: false },
-      { title: "Auth with JWT", duration: "38m", done: false },
-      { title: "Deploying full-stack", duration: "29m", done: false },
-    ],
-  },
-  {
-    id: "aws",
-    title: "AWS Solutions Architect",
-    track: "Certification",
-    thumb: "linear-gradient(135deg,#F59E0B,#DC2626)",
-    lessons: [
-      { title: "AWS global infra", duration: "18m", done: true },
-      { title: "EC2 & VPC basics", duration: "44m", done: false },
-      { title: "S3 storage classes", duration: "36m", done: false },
-      { title: "IAM & policies", duration: "40m", done: false },
-    ],
-  },
-  {
-    id: "data",
-    title: "Data Analytics & AI",
-    track: "Job Guaranteed",
-    thumb: "linear-gradient(135deg,#EC4899,#7C3AED)",
-    lessons: [
-      { title: "Python crash course", duration: "52m", done: false },
-      { title: "Pandas & NumPy", duration: "48m", done: false },
-      { title: "Visualization with Power BI", duration: "39m", done: false },
-    ],
-  },
-];
+// Courses are now pulled from the shared store
 
 const ASSESSMENTS = [
   { id: "a1", course: "Full-Stack", title: "React State Quiz", due: "Nov 12", status: "inProgress" as const, score: null },
@@ -70,8 +30,11 @@ const LIVE = [
 function LMSDash() {
   const nav = useNavigate();
   const { t } = useT();
+  const { state, updateCourse } = useSharedStore();
+  const COURSES = state.courses;
   const [authed, setAuthed] = useState(false);
-  const [active, setActive] = useState(COURSES[0]);
+  const [activeId, setActiveId] = useState(COURSES[0]?.id || "");
+  const active = COURSES.find(c => c.id === activeId) || COURSES[0];
 
   useEffect(() => {
     const raw = typeof window !== "undefined" ? sessionStorage.getItem("lms_user") : null;
@@ -92,7 +55,7 @@ function LMSDash() {
       acc.total += c.lessons.length;
       return acc;
     }, { done: 0, total: 0 });
-    return Math.round((totals.done / totals.total) * 100);
+    return totals.total > 0 ? Math.round((totals.done / totals.total) * 100) : 0;
   })();
 
   return (
@@ -141,13 +104,13 @@ function LMSDash() {
                 const pct = Math.round((done / c.lessons.length) * 100);
                 const isActive = active.id === c.id;
                 return (
-                  <button key={c.id} onClick={() => setActive(c)} className={`text-left rounded-2xl overflow-hidden border-2 transition ${isActive ? "border-magenta shadow-elegant" : "border-border hover:border-magenta/50"}`}>
+                  <button key={c.id} onClick={() => setActiveId(c.id)} className={`text-left rounded-2xl overflow-hidden border-2 transition ${isActive ? "border-magenta shadow-elegant" : "border-border hover:border-magenta/50"}`}>
                     <div className="h-24 grid place-items-center text-white" style={{ background: c.thumb }}>
                       <PlayCircle className="h-10 w-10 opacity-90" />
                     </div>
                     <div className="p-4">
                       <div className="text-[10px] uppercase font-bold tracking-wider text-magenta">{c.track}</div>
-                      <h3 className="font-bold text-foreground mt-1">{c.title}</h3>
+                      <h3 className="font-bold text-foreground mt-1">{c.name}</h3>
                       <div className="text-xs text-muted-foreground mt-2">{done}/{c.lessons.length} {t("lms.lessons")}</div>
                       <div className="h-1.5 w-full bg-secondary rounded-full mt-2 overflow-hidden">
                         <div className="h-full bg-magenta rounded-full" style={{ width: `${pct}%` }} />
@@ -164,12 +127,16 @@ function LMSDash() {
               </div>
               <div className="mt-3">
                 <div className="text-xs text-muted-foreground">{t("lms.player.title")}</div>
-                <h4 className="font-bold text-foreground">{active.title}</h4>
+                <h4 className="font-bold text-foreground">{active?.name}</h4>
               </div>
               <ul className="mt-3 space-y-1 max-h-64 overflow-auto pr-1">
-                {active.lessons.map((l, i) => (
+                {active?.lessons?.map((l, i) => (
                   <li key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-card transition">
-                    <input type="checkbox" defaultChecked={l.done} className="accent-magenta" />
+                    <input type="checkbox" checked={l.done} onChange={() => {
+                      const newLessons = [...active.lessons];
+                      newLessons[i] = { ...l, done: !l.done };
+                      updateCourse(active.id, { lessons: newLessons });
+                    }} className="accent-magenta" />
                     <span className={`flex-1 text-sm ${l.done ? "line-through text-muted-foreground" : "text-foreground"}`}>{l.title}</span>
                     <span className="text-xs text-muted-foreground">{l.duration}</span>
                   </li>

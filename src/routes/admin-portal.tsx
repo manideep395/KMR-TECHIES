@@ -15,45 +15,16 @@ export const Route = createFileRoute("/admin-portal")({
   component: AdminPortal,
 });
 
-type Student = { id: string; name: string; program: string; cgpa: string; status: "Active" | "Alumni" };
-type Course = { id: string; name: string; modules: number; price: string };
-type Lead = { id: string; name: string; email: string; subject: string; status: "Open" | "Contacted" | "Closed" };
-type Staff = { id: string; name: string; role: string; assignment: string };
+import { useSharedStore } from "@/lib/store";
 
-const initialStudents: Student[] = [
-  { id: "KMR-101", name: "Aarav Sharma", program: "B.Tech CSE", cgpa: "8.4", status: "Active" },
-  { id: "KMR-102", name: "K. Manideep", program: "CSE-AI", cgpa: "8.7", status: "Active" },
-  { id: "KMR-103", name: "Priya R.", program: "Full-Stack", cgpa: "9.1", status: "Alumni" },
-  { id: "KMR-104", name: "Arjun M.", program: "Cloud DevOps", cgpa: "8.2", status: "Active" },
-  { id: "KMR-105", name: "Sana K.", program: "Data Analytics", cgpa: "8.9", status: "Alumni" },
-];
-
-const initialCourses: Course[] = [
-  { id: "FSD-401", name: "Full-Stack Development", modules: 12, price: "₹85,000" },
-  { id: "CLD-302", name: "Cloud & DevOps", modules: 9, price: "₹65,000" },
-  { id: "DSA-201", name: "Data Structures", modules: 8, price: "₹35,000" },
-];
-
-const initialLeads: Lead[] = [
-  { id: "L-001", name: "Rohan Gupta", email: "rohan@example.com", subject: "Admission inquiry", status: "Open" },
-  { id: "L-002", name: "Meera J.", email: "meera@example.com", subject: "Govt program eligibility", status: "Contacted" },
-  { id: "L-003", name: "Kunal V.", email: "kunal@example.com", subject: "Fees installment", status: "Open" },
-];
-
-const initialStaff: Staff[] = [
-  { id: "S-01", name: "Priya Raman", role: "Lead Mentor", assignment: "Full-Stack" },
-  { id: "S-02", name: "Vikram S.", role: "Cloud Architect", assignment: "DevOps" },
-  { id: "S-03", name: "Anita D.", role: "Placement Lead", assignment: "Careers" },
-];
+// Initial arrays removed, now handled by the shared store
 
 function AdminPortal() {
   const { t } = useT();
-  const [students, setStudents] = useState<Student[]>(initialStudents);
-  const [courses, setCourses] = useState<Course[]>(initialCourses);
-  const [leads, setLeads] = useState<Lead[]>(initialLeads);
-  const [staff, setStaff] = useState<Staff[]>(initialStaff);
+  const { state, setStudents, setCourses, setLeads, setStaff, updateStudent } = useSharedStore();
+  const { students, courses, leads, staff } = state;
   const [q, setQ] = useState("");
-  const [editStudent, setEditStudent] = useState<Student | null>(null);
+  const [editStudent, setEditStudent] = useState<any | null>(null);
   const [newCourse, setNewCourse] = useState(false);
   const [cName, setCName] = useState("");
   const [cPrice, setCPrice] = useState("");
@@ -227,7 +198,7 @@ function AdminPortal() {
             </div>
           )}
           <DialogFooter>
-            <Button onClick={() => { if (editStudent) { setStudents(students.map(s => s.id === editStudent.id ? editStudent : s)); toast.success(t("admin.saved")); setEditStudent(null); } }} className="bg-cyan-500 hover:bg-cyan-600 text-white">{t("admin.save")}</Button>
+            <Button onClick={() => { if (editStudent) { updateStudent(editStudent.id, editStudent); toast.success(t("admin.saved")); setEditStudent(null); } }} className="bg-cyan-500 hover:bg-cyan-600 text-white">{t("admin.save")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -239,7 +210,7 @@ function AdminPortal() {
           <Input placeholder={t("admin.coursePlaceholder")} value={cName} onChange={e => setCName(e.target.value)} />
           <Input placeholder={t("admin.pricePlaceholder")} value={cPrice} onChange={e => setCPrice(e.target.value)} />
           <DialogFooter>
-            <Button onClick={() => { if (cName) { setCourses([...courses, { id: `NEW-${courses.length+1}`, name: cName, modules: 6, price: cPrice || "₹50,000" }]); setCName(""); setCPrice(""); setNewCourse(false); toast.success(t("admin.courseAdded")); } }} className="bg-cyan-500 hover:bg-cyan-600 text-white">{t("admin.create")}</Button>
+            <Button onClick={() => { if (cName) { setCourses([...courses, { id: `NEW-${courses.length+1}`, name: cName, modules: 6, price: cPrice || "₹50,000", track: "New Track", thumb: "linear-gradient(135deg,#6B7280,#374151)", lessons: [] }]); setCName(""); setCPrice(""); setNewCourse(false); toast.success(t("admin.courseAdded")); } }} className="bg-cyan-500 hover:bg-cyan-600 text-white">{t("admin.create")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

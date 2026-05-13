@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { DashThemeToggle } from "@/components/site/DashThemeToggle";
+import { useSharedStore } from "@/lib/store";
 
 export const Route = createFileRoute("/dashboard/student")({
   head: () => ({ meta: [{ title: "Student Dashboard — KMR Technologies" }] }),
@@ -57,7 +58,10 @@ function StudentDash() {
 
   if (!authed) return null;
 
-  const profile = { name: "K. Manideep", id: "KMR-102", program: "CSE-AI", semester: "5" };
+  const { state } = useSharedStore();
+  // Find K. Manideep in the store or fallback
+  const myStudent = state.students.find(s => s.id === "KMR-102");
+  const profile = myStudent ? { name: myStudent.name, id: myStudent.id, program: myStudent.program, semester: myStudent.semester || "5" } : { name: "K. Manideep", id: "KMR-102", program: "CSE-AI", semester: "5" };
   const actions = [
     { i: Wallet, l: t("dash.fee"), c: "from-cyan-500 to-blue-600", onClick: () => toast.success(t("dash.fee")) },
     { i: Calendar, l: t("dash.attendance"), c: "from-magenta to-rose-600", onClick: () => toast.success(t("dash.attendance") + ": 92%") },

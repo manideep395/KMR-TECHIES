@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useParams, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,30 +8,21 @@ import { Label } from "@/components/ui/label";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
+import { useRealtimeData } from "@/hooks/useRealtimeData";
+import type { Tables } from "@/integrations/supabase/types";
 
-const CATALOG: Record<string, { name: string; price: number }[]> = {
-  "job-guaranteed": [
-    { name: "Full-Stack Web Development", price: 89000 },
-    { name: "Data Analytics & AI", price: 79000 },
-    { name: "Cloud & DevOps Engineer", price: 85000 },
-    { name: "Cybersecurity Specialist", price: 95000 },
-  ],
-  "govt-sponsored": [
-    { name: "PMKVY 4.0 — IT/ITES", price: 0 },
-    { name: "DDU-GKY Digital Skills", price: 0 },
-    { name: "NAPS Apprenticeship", price: 0 },
-  ],
-  certification: [
-    { name: "AWS Solutions Architect", price: 24999 },
-    { name: "Microsoft Azure Fundamentals", price: 14999 },
-    { name: "Google Cloud Associate", price: 22999 },
-    { name: "Certified Scrum Master", price: 19999 },
-  ],
-  academic: [
-    { name: "B.Tech CSE (Industry Track)", price: 160000 },
-    { name: "MCA Online", price: 95000 },
-    { name: "M.Tech Data Science", price: 200000 },
-  ],
+type Course = Tables<'courses'>;
+type Certification = Tables<'certifications'>;
+type Training = Tables<'trainings'>;
+type AcademicProgram = Tables<'academic_programs'>;
+
+type CourseType = Course | Certification | Training | AcademicProgram;
+
+const CATEGORY_MAP: Record<string, 'courses' | 'certifications' | 'trainings' | 'academic_programs'> = {
+  "job-guaranteed": "courses",
+  "govt-sponsored": "courses",
+  "certification": "certifications",
+  "academic": "academic_programs",
 };
 
 export const Route = createFileRoute("/enroll/$category/$courseId")({
@@ -43,9 +34,16 @@ function EnrollPage() {
   const { t } = useT();
   const nav = useNavigate();
   const { category, courseId } = useParams({ from: "/enroll/$category/$courseId" });
-  const course = CATALOG[category]?.[Number(courseId)];
-  const [done, setDone] = useState(false);
+  const tableName = CATEGORY_MAP[category];
+  const { data: allCourses } = useRealtimeData<CourseType>(tableName);
+  const [course, setCourse] = useState<CourseType | null>(null);
 
+  useEffect(() => {
+    if (allCourses && courseId) {
+      const found = allCourses.find(c => c.id === courseId);
+      setCourse(found || null);
+    }
+  }, [allCourses, courseId]);
   if (!course) {
     return (
       <SiteLayout>
@@ -57,10 +55,11 @@ function EnrollPage() {
     );
   }
 
-  const fee = course.price;
+  const fee = (course as any).price ?? 0;
   const gst = Math.round(fee * 0.18);
   const total = fee + gst;
   const fmt = (n: number) => n === 0 ? "Free" : `₹${n.toLocaleString("en-IN")}`;
+  const [done, setDone] = useState(false);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,7 +73,7 @@ function EnrollPage() {
       <section className="bg-navy text-white py-12">
         <div className="container mx-auto px-4 lg:px-8">
           <Link to=".." className="inline-flex items-center gap-1 text-white/70 hover:text-gold text-sm"><ArrowLeft className="h-4 w-4" /> Back</Link>
-          <h1 className="text-3xl md:text-4xl font-extrabold mt-3">{t("enroll.title")} — {course.name}</h1>
+          <h1 className="text-3xl md:text-4xl font-extrabold mt-3">{t("enroll.title")} — {course.title}</h1>
           <p className="text-white/70 mt-2">{t("enroll.intro")}</p>
         </div>
       </section>
@@ -103,7 +102,7 @@ function EnrollPage() {
         <aside className="rounded-2xl bg-secondary border border-border p-6 h-fit">
           <h3 className="font-bold text-foreground mb-4">{t("enroll.summary")}</h3>
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between"><span className="text-muted-foreground">{course.name}</span><span className="font-semibold">{fmt(fee)}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">{course.title}</span><span className="font-semibold">{fmt(fee)}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">{t("enroll.gst")}</span><span className="font-semibold">{fmt(gst)}</span></div>
             <div className="border-t border-border pt-2 flex justify-between text-base"><span className="font-bold">{t("enroll.total")}</span><span className="font-extrabold text-magenta">{fmt(total)}</span></div>
           </div>

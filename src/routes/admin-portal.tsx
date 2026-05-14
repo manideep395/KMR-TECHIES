@@ -77,9 +77,14 @@ function AdminPortal() {
               if (retryError) {
                 toast.error(retryError.message);
               } else if (retryData.user) {
+                // Ensure admin records exist for this user
+                await supabase.from('profiles').upsert({ id: retryData.user.id, email: adminEmail, full_name: ADMIN_NAME, role: 'admin' });
+                await (supabase.from('admins' as any) as any).upsert({ id: retryData.user.id });
                 toast.success("Admin login successful");
                 setAdminEmail("");
                 setAdminPassword("");
+                // Refresh page to reload auth state and profiles data
+                setTimeout(() => window.location.reload(), 500);
               }
             } else {
               toast.error(signupError.message);
@@ -87,19 +92,36 @@ function AdminPortal() {
           } else {
             const user = signupData?.user ?? signupData?.session?.user;
             if (user) {
-              await supabase.from('profiles').upsert({ id: user.id, email: adminEmail, full_name: ADMIN_NAME, role: 'admin' });
-              await (supabase.from('admins' as any) as any).upsert({ id: user.id });
+              const { error: profileError } = await supabase.from('profiles').upsert({ id: user.id, email: adminEmail, full_name: ADMIN_NAME, role: 'admin' });
+              if (profileError) {
+                toast.error("Failed to create admin profile: " + profileError.message);
+                setAdminLoading(false);
+                return;
+              }
+              const { error: adminError } = await (supabase.from('admins' as any) as any).upsert({ id: user.id });
+              if (adminError) {
+                toast.error("Failed to create admin record: " + adminError.message);
+                setAdminLoading(false);
+                return;
+              }
               toast.success("Admin account created and signed in");
               setAdminEmail("");
               setAdminPassword("");
+              // Refresh page to reload auth state and profiles data
+              setTimeout(() => window.location.reload(), 500);
             } else {
               toast.success("Admin signup successful. Please sign in.");
             }
           }
         } else if (data.user) {
+          // Ensure admin records exist for this user on successful login
+          await supabase.from('profiles').upsert({ id: data.user.id, email: adminEmail, full_name: ADMIN_NAME, role: 'admin' });
+          await (supabase.from('admins' as any) as any).upsert({ id: data.user.id });
           toast.success("Admin login successful");
           setAdminEmail("");
           setAdminPassword("");
+          // Refresh page to reload auth state and profiles data
+          setTimeout(() => window.location.reload(), 500);
         }
       } catch (err) {
         toast.error("Admin login failed");

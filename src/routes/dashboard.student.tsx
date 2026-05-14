@@ -7,6 +7,7 @@ import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { DashThemeToggle } from "@/components/site/DashThemeToggle";
 import { useSharedStore } from "@/lib/store";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/dashboard/student")({
   head: () => ({ meta: [{ title: "Student Dashboard — KMR Technologies" }] }),
@@ -43,25 +44,35 @@ function Radial({ value }: { value: number }) {
 function StudentDash() {
   const nav = useNavigate();
   const { t } = useT();
-  const [authed, setAuthed] = useState(false);
+  const { user, signOut, loading } = useAuth();
 
   useEffect(() => {
-    const raw = typeof window !== "undefined" ? sessionStorage.getItem("sis_user") : null;
-    if (!raw) { nav({ to: "/student-login/sis" }); return; }
-    setAuthed(true);
-  }, [nav]);
+    if (!loading && !user) {
+      nav({ to: "/student-login/sis" });
+    }
+  }, [user, loading, nav]);
 
-  function logout() {
-    sessionStorage.removeItem("sis_user");
+  async function logout() {
+    await signOut();
     nav({ to: "/student-login" });
   }
 
-  if (!authed) return null;
+  if (loading || !user) return null;
 
   const { state } = useSharedStore();
-  // Find K. Manideep in the store or fallback
-  const myStudent = state.students.find(s => s.id === "KMR-102");
-  const profile = myStudent ? { name: myStudent.name, id: myStudent.id, program: myStudent.program, semester: myStudent.semester || "5" } : { name: "K. Manideep", id: "KMR-102", program: "CSE-AI", semester: "5" };
+  // Find user in the store or fallback
+  const myStudent = state.students.find(s => s.id === user.id);
+  const profile = myStudent ? {
+    name: myStudent.name,
+    id: myStudent.id,
+    program: myStudent.program,
+    semester: myStudent.semester || "5"
+  } : {
+    name: user.user_metadata?.full_name || user.email || "Student",
+    id: user.id,
+    program: "CSE-AI",
+    semester: "5"
+  };
   const actions = [
     { i: Wallet, l: t("dash.fee"), c: "from-cyan-500 to-blue-600", onClick: () => toast.success(t("dash.fee")) },
     { i: Calendar, l: t("dash.attendance"), c: "from-magenta to-rose-600", onClick: () => toast.success(t("dash.attendance") + ": 92%") },

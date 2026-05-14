@@ -13,13 +13,10 @@ export const Route = createFileRoute("/courses/govt-sponsored")({
 function Page() {
   const { t } = useT();
   return <CourseListPage
+    category="courses"
     slug="govt-sponsored"
     title={t("cp.govt.title")}
     tag={t("cp.govt.tag")}
     intro={t("cp.govt.intro")}
-    courses={[
-      { name: "PMKVY 4.0 — IT/ITES", duration: "3 months", level: "Entry", price: "Free", outcomes: ["Govt certificate", "Stipend eligible", "Placement drive"] },
-      { name: "DDU-GKY Digital Skills", duration: "4 months", level: "Entry", price: "Free", outcomes: ["Residential training", "Free meals & lodging", "Job assurance"] },
-      { name: "NAPS Apprenticeship", duration: "12 months", level: "All", price: "Stipend ₹9k/mo", outcomes: ["Earn while learning", "MSDE certificate", "OJT with employers"] },
-    ]} />;
+  />;
 }

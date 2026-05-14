@@ -7,14 +7,286 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
   public: {
     Tables: {
-      [_ in never]: never
+      academic_programs: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          level: string
+          duration: string | null
+          price: number | null
+          image_url: string | null
+          curriculum: Json | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          level: string
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          curriculum?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          level?: string
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          curriculum?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      careers: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          location: string | null
+          type: string
+          salary_range: string | null
+          requirements: string[] | null
+          benefits: string[] | null
+          application_deadline: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          location?: string | null
+          type: string
+          salary_range?: string | null
+          requirements?: string[] | null
+          benefits?: string[] | null
+          application_deadline?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          location?: string | null
+          type?: string
+          salary_range?: string | null
+          requirements?: string[] | null
+          benefits?: string[] | null
+          application_deadline?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      certifications: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          provider: string | null
+          duration: string | null
+          price: number | null
+          image_url: string | null
+          skills_covered: string[] | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          provider?: string | null
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          skills_covered?: string[] | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          provider?: string | null
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          skills_covered?: string[] | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          category: string
+          duration: string | null
+          price: number | null
+          image_url: string | null
+          syllabus: Json | null
+          prerequisites: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          category: string
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          syllabus?: Json | null
+          prerequisites?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          category?: string
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          syllabus?: Json | null
+          prerequisites?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      enrollments: {
+        Row: {
+          id: string
+          student_id: string
+          course_id: string
+          enrollment_date: string
+          status: string
+          progress: number
+        }
+        Insert: {
+          id?: string
+          student_id: string
+          course_id: string
+          enrollment_date?: string
+          status?: string
+          progress?: number
+        }
+        Update: {
+          id?: string
+          student_id?: string
+          course_id?: string
+          enrollment_date?: string
+          status?: string
+          progress?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      profiles: {
+        Row: {
+          id: string
+          email: string
+          full_name: string | null
+          role: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          email: string
+          full_name?: string | null
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          full_name?: string | null
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      trainings: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          type: string
+          duration: string | null
+          price: number | null
+          image_url: string | null
+          schedule: Json | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          type: string
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          schedule?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          type?: string
+          duration?: string | null
+          price?: number | null
+          image_url?: string | null
+          schedule?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

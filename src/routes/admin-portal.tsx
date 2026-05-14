@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Users, BookOpen, TrendingUp, Inbox, Search, Plus, Edit, Trash2, Eye, GraduationCap, UserCog, FileUp, IndianRupee, X } from "lucide-react";
+import { Users, BookOpen, TrendingUp, Inbox, Search, Plus, Edit, Trash2, Eye, GraduationCap, UserCog, FileUp, IndianRupee, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -9,34 +9,95 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { DashThemeToggle } from "@/components/site/DashThemeToggle";
+import { useRealtimeData } from "@/hooks/useRealtimeData";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/admin-portal")({
   head: () => ({ meta: [{ title: "Admin Portal — KMR Technologies" }] }),
   component: AdminPortal,
 });
 
-import { useSharedStore } from "@/lib/store";
-
-// Initial arrays removed, now handled by the shared store
-
 function AdminPortal() {
   const { t } = useT();
-  const { state, setStudents, setCourses, setLeads, setStaff, updateStudent } = useSharedStore();
-  const { students, courses, leads, staff } = state;
+  const { user, loading: authLoading } = useAuth();
   const [q, setQ] = useState("");
-  const [editStudent, setEditStudent] = useState<any | null>(null);
-  const [newCourse, setNewCourse] = useState(false);
-  const [cName, setCName] = useState("");
-  const [cPrice, setCPrice] = useState("");
+  const [editItem, setEditItem] = useState<any | null>(null);
+  const [newItem, setNewItem] = useState<{ type: string; data: any } | null>(null);
 
-  const filtered = students.filter(s => (s.name + s.id + s.program).toLowerCase().includes(q.toLowerCase()));
+  // Real-time data
+  const { data: courses, loading: coursesLoading } = useRealtimeData<Tables<'courses'>>('courses');
+  const { data: certifications, loading: certsLoading } = useRealtimeData<Tables<'certifications'>>('certifications');
+  const { data: trainings, loading: trainingsLoading } = useRealtimeData<Tables<'trainings'>>('trainings');
+  const { data: academicPrograms, loading: programsLoading } = useRealtimeData<Tables<'academic_programs'>>('academic_programs');
+  const { data: careers, loading: careersLoading } = useRealtimeData<Tables<'careers'>>('careers');
+  const { data: profiles, loading: profilesLoading } = useRealtimeData<Tables<'profiles'>>('profiles');
+
+  if (authLoading || coursesLoading || certsLoading || trainingsLoading || programsLoading || careersLoading || profilesLoading) {
+    return (
+      <div className="min-h-screen bg-secondary flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-magenta" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-secondary flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Access Denied</h1>
+          <p className="text-muted-foreground">You must be logged in as an admin to access this portal.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const filteredCourses = courses.filter(c => (c.title + c.description).toLowerCase().includes(q.toLowerCase()));
+  const filteredCerts = certifications.filter(c => (c.title + c.description).toLowerCase().includes(q.toLowerCase()));
+  const filteredTrainings = trainings.filter(t => (t.title + t.description).toLowerCase().includes(q.toLowerCase()));
+  const filteredPrograms = academicPrograms.filter(p => (p.title + p.description).toLowerCase().includes(q.toLowerCase()));
+  const filteredCareers = careers.filter(c => (c.title + c.description).toLowerCase().includes(q.toLowerCase()));
 
   const stats = [
-    { i: Users, l: t("admin.totalStudents"), v: "5,200", c: "from-cyan-500 to-blue-600" },
-    { i: BookOpen, l: t("admin.activeCourses"), v: "42", c: "from-magenta to-rose-600" },
-    { i: TrendingUp, l: t("admin.placement"), v: "98%", c: "from-emerald-500 to-teal-600" },
-    { i: Inbox, l: t("admin.leads"), v: String(leads.filter(l => l.status === "Open").length + 121), c: "from-amber-500 to-orange-600" },
+    { i: Users, l: "Total Students", v: profiles.length.toString(), c: "from-cyan-500 to-blue-600" },
+    { i: BookOpen, l: "Active Courses", v: (courses.length + certifications.length + trainings.length + academicPrograms.length).toString(), c: "from-magenta to-rose-600" },
+    { i: TrendingUp, l: "Open Positions", v: careers.length.toString(), c: "from-emerald-500 to-teal-600" },
+    { i: Inbox, l: "Total Programs", v: academicPrograms.length.toString(), c: "from-amber-500 to-orange-600" },
   ];
+
+  const handleAddItem = async (type: string, data: any) => {
+    try {
+      const { error } = await supabase.from(type).insert(data);
+      if (error) throw error;
+      toast.success("Item added successfully");
+      setNewItem(null);
+    } catch (error) {
+      toast.error("Failed to add item");
+    }
+  };
+
+  const handleUpdateItem = async (type: string, id: string, data: any) => {
+    try {
+      const { error } = await supabase.from(type).update(data).eq('id', id);
+      if (error) throw error;
+      toast.success("Item updated successfully");
+      setEditItem(null);
+    } catch (error) {
+      toast.error("Failed to update item");
+    }
+  };
+
+  const handleDeleteItem = async (type: string, id: string) => {
+    if (!confirm("Are you sure you want to delete this item?")) return;
+    try {
+      const { error } = await supabase.from(type).delete().eq('id', id);
+      if (error) throw error;
+      toast.success("Item deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete item");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -48,15 +109,15 @@ function AdminPortal() {
           </Link>
           <div className="flex items-center gap-2">
             <DashThemeToggle />
-            <div className="text-xs text-white/70">{t("admin.mock")}</div>
+            <div className="text-xs text-white/70">Real-time Admin Portal</div>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 lg:px-8 py-8 space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">{t("admin.title")}</h1>
-          <p className="text-muted-foreground text-sm">{t("admin.sub")}</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">Admin Portal</h1>
+          <p className="text-muted-foreground text-sm">Manage courses, certifications, trainings, and more in real-time</p>
         </div>
 
         {/* Stats */}
@@ -70,49 +131,64 @@ function AdminPortal() {
           ))}
         </div>
 
-        <Tabs defaultValue="students" className="bg-card rounded-2xl border border-border p-4">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
-            <TabsTrigger value="students">{t("admin.students")}</TabsTrigger>
-            <TabsTrigger value="courses">{t("admin.courses")}</TabsTrigger>
-            <TabsTrigger value="inbox">{t("admin.inbox")}</TabsTrigger>
-            <TabsTrigger value="staff">{t("admin.staff")}</TabsTrigger>
+        <Tabs defaultValue="courses" className="bg-card rounded-2xl border border-border p-4">
+          <TabsList className="grid grid-cols-2 md:grid-cols-5 w-full">
+            <TabsTrigger value="courses">Courses</TabsTrigger>
+            <TabsTrigger value="certifications">Certifications</TabsTrigger>
+            <TabsTrigger value="trainings">Trainings</TabsTrigger>
+            <TabsTrigger value="academic">Academic</TabsTrigger>
+            <TabsTrigger value="careers">Careers</TabsTrigger>
           </TabsList>
 
-          {/* STUDENTS */}
-          <TabsContent value="students" className="space-y-4 mt-4">
+          {/* COURSES */}
+          <TabsContent value="courses" className="space-y-4 mt-4">
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                <Input placeholder={t("admin.search")} value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
+                <Input placeholder="Search courses..." value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
               </div>
-              <Button className="bg-cyan-500 hover:bg-cyan-600 text-white"><Plus className="h-4 w-4 mr-1" /> {t("admin.add")}</Button>
+              <Button
+                className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                onClick={() => setNewItem({ type: 'courses', data: { title: '', description: '', category: '', duration: '', price: null } })}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add Course
+              </Button>
             </div>
             <div className="border border-border rounded-xl overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>{t("dash.name")}</TableHead>
-                    <TableHead>{t("dash.program")}</TableHead>
-                    <TableHead>CGPA</TableHead>
-                    <TableHead>{t("admin.status")}</TableHead>
-                    <TableHead className="text-right">{t("admin.actions")}</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.map(s => (
-                    <TableRow key={s.id}>
-                      <TableCell className="font-mono text-xs">{s.id}</TableCell>
-                      <TableCell className="font-semibold">{s.name}</TableCell>
-                      <TableCell>{s.program}</TableCell>
-                      <TableCell>{s.cgpa}</TableCell>
-                      <TableCell>
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${s.status === "Active" ? "bg-emerald-100 text-emerald-700" : "bg-secondary text-muted-foreground"}`}>{s.status === "Active" ? t("admin.active") : t("admin.alumni")}</span>
-                      </TableCell>
+                  {filteredCourses.map((course) => (
+                    <TableRow key={course.id}>
+                      <TableCell className="font-medium">{course.title}</TableCell>
+                      <TableCell>{course.category}</TableCell>
+                      <TableCell>{course.duration}</TableCell>
+                      <TableCell>{course.price ? `₹${course.price}` : 'N/A'}</TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" variant="ghost" onClick={() => toast.info(`${s.name}`)}><Eye className="h-3.5 w-3.5" /></Button>
-                        <Button size="sm" variant="ghost" onClick={() => setEditStudent(s)}><Edit className="h-3.5 w-3.5" /></Button>
-                        <Button size="sm" variant="ghost" onClick={() => { setStudents(students.filter(x => x.id !== s.id)); toast.success(t("admin.deleted")); }}><Trash2 className="h-3.5 w-3.5 text-destructive" /></Button>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditItem({ type: 'courses', data: course })}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteItem('courses', course.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -121,99 +197,308 @@ function AdminPortal() {
             </div>
           </TabsContent>
 
-          {/* COURSES */}
-          <TabsContent value="courses" className="space-y-4 mt-4">
-            <div className="flex justify-end">
-              <Button onClick={() => setNewCourse(true)} className="bg-cyan-500 hover:bg-cyan-600 text-white"><Plus className="h-4 w-4 mr-1" /> {t("admin.add")}</Button>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {courses.map(c => (
-                <div key={c.id} className="rounded-xl border border-border p-5 bg-secondary/40">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="font-bold text-foreground">{c.name}</div>
-                      <div className="text-xs text-muted-foreground">{c.id} · {c.modules} {t("admin.modules")}</div>
-                    </div>
-                    <span className="text-sm font-bold text-cyan-600 flex items-center"><IndianRupee className="h-3 w-3" />{c.price.replace("₹", "")}</span>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <Button size="sm" variant="outline" onClick={() => toast.success(t("admin.syllabusUploaded"))}><FileUp className="h-3.5 w-3.5 mr-1" /> {t("admin.syllabus")}</Button>
-                    <Button size="sm" variant="ghost" onClick={() => toast.info(t("admin.editCourse"))}><Edit className="h-3.5 w-3.5" /></Button>
-                    <Button size="sm" variant="ghost" onClick={() => { setCourses(courses.filter(x => x.id !== c.id)); toast.success(t("admin.removed")); }}><Trash2 className="h-3.5 w-3.5 text-destructive" /></Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* INBOX */}
-          <TabsContent value="inbox" className="space-y-3 mt-4">
-            {leads.map(l => (
-              <div key={l.id} className="flex items-center justify-between gap-3 p-4 rounded-xl border border-border bg-secondary/40">
-                <div className="min-w-0">
-                  <div className="font-semibold text-foreground">{l.name} <span className="text-xs text-muted-foreground">· {l.email}</span></div>
-                  <div className="text-sm text-muted-foreground truncate">{l.subject}</div>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className={`text-xs px-2 py-1 rounded-full ${l.status === "Open" ? "bg-amber-100 text-amber-700" : l.status === "Contacted" ? "bg-cyan-100 text-cyan-700" : "bg-emerald-100 text-emerald-700"}`}>{l.status}</span>
-                  <Button size="sm" variant="outline" onClick={() => setLeads(leads.map(x => x.id === l.id ? { ...x, status: "Contacted" } : x))}>{t("admin.contacted")}</Button>
-                  <Button size="sm" variant="ghost" onClick={() => setLeads(leads.map(x => x.id === l.id ? { ...x, status: "Closed" } : x))}><X className="h-3.5 w-3.5" /></Button>
-                </div>
+          {/* CERTIFICATIONS */}
+          <TabsContent value="certifications" className="space-y-4 mt-4">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+                <Input placeholder="Search certifications..." value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
               </div>
-            ))}
+              <Button
+                className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                onClick={() => setNewItem({ type: 'certifications', data: { title: '', description: '', provider: '', duration: '', price: null } })}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add Certification
+              </Button>
+            </div>
+            <div className="border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Provider</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredCerts.map((cert) => (
+                    <TableRow key={cert.id}>
+                      <TableCell className="font-medium">{cert.title}</TableCell>
+                      <TableCell>{cert.provider}</TableCell>
+                      <TableCell>{cert.duration}</TableCell>
+                      <TableCell>{cert.price ? `₹${cert.price}` : 'N/A'}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditItem({ type: 'certifications', data: cert })}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteItem('certifications', cert.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </TabsContent>
 
-          {/* STAFF */}
-          <TabsContent value="staff" className="space-y-3 mt-4">
-            <div className="flex justify-end">
-              <Button onClick={() => { setStaff([...staff, { id: `S-0${staff.length+1}`, name: "New Instructor", role: "Mentor", assignment: "—" }]); toast.success(t("admin.removed")); }} className="bg-cyan-500 hover:bg-cyan-600 text-white"><Plus className="h-4 w-4 mr-1" /> {t("admin.add")}</Button>
+          {/* TRAININGS */}
+          <TabsContent value="trainings" className="space-y-4 mt-4">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+                <Input placeholder="Search trainings..." value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
+              </div>
+              <Button
+                className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                onClick={() => setNewItem({ type: 'trainings', data: { title: '', description: '', type: '', duration: '', price: null } })}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add Training
+              </Button>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {staff.map(p => (
-                <div key={p.id} className="rounded-xl border border-border bg-secondary/40 p-4 flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 grid place-items-center text-white font-bold">
-                    {p.name.split(" ").map(n => n[0]).join("")}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-bold text-foreground">{p.name}</div>
-                    <div className="text-xs text-muted-foreground">{p.role} · {p.assignment}</div>
-                  </div>
-                  <Button size="sm" variant="ghost" onClick={() => { setStaff(staff.filter(x => x.id !== p.id)); toast.success(t("admin.removed")); }}><Trash2 className="h-3.5 w-3.5 text-destructive" /></Button>
-                </div>
-              ))}
+            <div className="border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredTrainings.map((training) => (
+                    <TableRow key={training.id}>
+                      <TableCell className="font-medium">{training.title}</TableCell>
+                      <TableCell>{training.type}</TableCell>
+                      <TableCell>{training.duration}</TableCell>
+                      <TableCell>{training.price ? `₹${training.price}` : 'N/A'}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditItem({ type: 'trainings', data: training })}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteItem('trainings', training.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
+
+          {/* ACADEMIC PROGRAMS */}
+          <TabsContent value="academic" className="space-y-4 mt-4">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+                <Input placeholder="Search programs..." value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
+              </div>
+              <Button
+                className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                onClick={() => setNewItem({ type: 'academic_programs', data: { title: '', description: '', level: '', duration: '', price: null } })}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add Program
+              </Button>
+            </div>
+            <div className="border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Level</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredPrograms.map((program) => (
+                    <TableRow key={program.id}>
+                      <TableCell className="font-medium">{program.title}</TableCell>
+                      <TableCell>{program.level}</TableCell>
+                      <TableCell>{program.duration}</TableCell>
+                      <TableCell>{program.price ? `₹${program.price}` : 'N/A'}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditItem({ type: 'academic_programs', data: program })}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteItem('academic_programs', program.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
+
+          {/* CAREERS */}
+          <TabsContent value="careers" className="space-y-4 mt-4">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+                <Input placeholder="Search careers..." value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
+              </div>
+              <Button
+                className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                onClick={() => setNewItem({ type: 'careers', data: { title: '', description: '', location: '', type: '', salary_range: '', requirements: [], benefits: [] } })}
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add Career
+              </Button>
+            </div>
+            <div className="border border-border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Salary</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredCareers.map((career) => (
+                    <TableRow key={career.id}>
+                      <TableCell className="font-medium">{career.title}</TableCell>
+                      <TableCell>{career.location}</TableCell>
+                      <TableCell>{career.type}</TableCell>
+                      <TableCell>{career.salary_range}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditItem({ type: 'careers', data: career })}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteItem('careers', career.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Edit Dialog */}
+        <Dialog open={!!editItem} onOpenChange={() => setEditItem(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit {editItem?.type}</DialogTitle>
+            </DialogHeader>
+            {editItem && (
+              <div className="space-y-4">
+                {Object.keys(editItem.data).map((key) => {
+                  if (key === 'id' || key === 'created_at' || key === 'updated_at') return null;
+                  return (
+                    <div key={key}>
+                      <label className="text-sm font-medium">{key}</label>
+                      <Input
+                        value={editItem.data[key] || ''}
+                        onChange={(e) => setEditItem({
+                          ...editItem,
+                          data: { ...editItem.data, [key]: e.target.value }
+                        })}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            <DialogFooter>
+              <Button onClick={() => setEditItem(null)}>Cancel</Button>
+              <Button
+                onClick={() => editItem && handleUpdateItem(editItem.type, editItem.data.id, editItem.data)}
+              >
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Add Dialog */}
+        <Dialog open={!!newItem} onOpenChange={() => setNewItem(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add {newItem?.type}</DialogTitle>
+            </DialogHeader>
+            {newItem && (
+              <div className="space-y-4">
+                {Object.keys(newItem.data).map((key) => {
+                  if (key === 'id' || key === 'created_at' || key === 'updated_at') return null;
+                  return (
+                    <div key={key}>
+                      <label className="text-sm font-medium">{key}</label>
+                      <Input
+                        value={newItem.data[key] || ''}
+                        onChange={(e) => setNewItem({
+                          ...newItem,
+                          data: { ...newItem.data, [key]: e.target.value }
+                        })}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            <DialogFooter>
+              <Button onClick={() => setNewItem(null)}>Cancel</Button>
+              <Button
+                onClick={() => newItem && handleAddItem(newItem.type, newItem.data)}
+              >
+                Add Item
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </main>
-
-      {/* Edit student dialog */}
-      <Dialog open={!!editStudent} onOpenChange={o => !o && setEditStudent(null)}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>{t("admin.edit")} — {editStudent?.name}</DialogTitle></DialogHeader>
-          {editStudent && (
-            <div className="space-y-3">
-              <Input value={editStudent.name} onChange={e => setEditStudent({ ...editStudent, name: e.target.value })} />
-              <Input value={editStudent.program} onChange={e => setEditStudent({ ...editStudent, program: e.target.value })} />
-              <Input value={editStudent.cgpa} onChange={e => setEditStudent({ ...editStudent, cgpa: e.target.value })} />
-            </div>
-          )}
-          <DialogFooter>
-            <Button onClick={() => { if (editStudent) { updateStudent(editStudent.id, editStudent); toast.success(t("admin.saved")); setEditStudent(null); } }} className="bg-cyan-500 hover:bg-cyan-600 text-white">{t("admin.save")}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* New course dialog */}
-      <Dialog open={newCourse} onOpenChange={setNewCourse}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>{t("admin.newCourse")}</DialogTitle></DialogHeader>
-          <Input placeholder={t("admin.coursePlaceholder")} value={cName} onChange={e => setCName(e.target.value)} />
-          <Input placeholder={t("admin.pricePlaceholder")} value={cPrice} onChange={e => setCPrice(e.target.value)} />
-          <DialogFooter>
-            <Button onClick={() => { if (cName) { setCourses([...courses, { id: `NEW-${courses.length+1}`, name: cName, modules: 6, price: cPrice || "₹50,000", track: "New Track", thumb: "linear-gradient(135deg,#6B7280,#374151)", lessons: [] }]); setCName(""); setCPrice(""); setNewCourse(false); toast.success(t("admin.courseAdded")); } }} className="bg-cyan-500 hover:bg-cyan-600 text-white">{t("admin.create")}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
+

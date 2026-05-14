@@ -22,7 +22,7 @@ export const Route = createFileRoute("/admin-portal")({
 
 function AdminPortal() {
   const { t } = useT();
-  const { user, loading: authLoading, signIn } = useAuth();
+  const { user, loading: authLoading, signIn, signUp } = useAuth();
   const [q, setQ] = useState("");
   const [editItem, setEditItem] = useState<any | null>(null);
   const [newItem, setNewItem] = useState<{ type: string; data: any } | null>(null);
@@ -32,6 +32,9 @@ function AdminPortal() {
   const [adminPassword, setAdminPassword] = useState("");
   const [adminLoading, setAdminLoading] = useState(false);
   const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL ?? "admin@kmrtechies.com";
+  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? "admin@123";
+  const ADMIN_NAME = import.meta.env.VITE_ADMIN_NAME ?? "Admin User";
 
   // Real-time data
   const { data: courses, loading: coursesLoading } = useRealtimeData<Tables<'courses'>>('courses');
@@ -57,10 +60,40 @@ function AdminPortal() {
     const handleAdminLogin = async (e: FormEvent) => {
       e.preventDefault();
       setAdminLoading(true);
+      if (adminEmail !== ADMIN_EMAIL || adminPassword !== ADMIN_PASSWORD) {
+        toast.error("Invalid admin credentials");
+        setAdminLoading(false);
+        return;
+      }
       try {
         const { data, error } = await signIn(adminEmail, adminPassword);
         if (error) {
-          toast.error(error.message);
+          const { data: signupData, error: signupError } = await signUp(adminEmail, adminPassword, { full_name: ADMIN_NAME });
+          if (signupError) {
+            if (signupError.message.toLowerCase().includes('already registered')) {
+              const { data: retryData, error: retryError } = await signIn(adminEmail, adminPassword);
+              if (retryError) {
+                toast.error(retryError.message);
+              } else if (retryData.user) {
+                toast.success("Admin login successful");
+                setAdminEmail("");
+                setAdminPassword("");
+              }
+            } else {
+              toast.error(signupError.message);
+            }
+          } else {
+            const user = signupData?.user ?? signupData?.session?.user;
+            if (user) {
+              await supabase.from('profiles').upsert({ id: user.id, email: adminEmail, full_name: ADMIN_NAME, role: 'admin' });
+              await supabase.from('admins').upsert({ id: user.id });
+              toast.success("Admin account created and signed in");
+              setAdminEmail("");
+              setAdminPassword("");
+            } else {
+              toast.success("Admin signup initiated. Check your email if confirmation is required.");
+            }
+          }
         } else if (data.user) {
           toast.success("Admin login successful");
           setAdminEmail("");

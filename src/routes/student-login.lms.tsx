@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { GraduationCap, Lock, User, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/student-login/lms")({
   head: () => ({ meta: [{ title: "LMS Login — KMR Technologies" }] }),
@@ -16,25 +17,48 @@ export const Route = createFileRoute("/student-login/lms")({
 function LMSLogin() {
   const nav = useNavigate();
   const { t } = useT();
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
+  const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState("demo@kmrtechies.com");
   const [password, setPassword] = useState("demo1234");
+  const [name, setName] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data, error } = await signIn(email, password);
-      if (error) {
-        toast.error(error.message);
-      } else if (data.user) {
-        toast.success(t("lf.welcome"));
-        nav({ to: "/dashboard/lms" });
+      if (mode === 'register') {
+        const { data, error } = await signUp(email, password, { full_name: name });
+        if (error) {
+          toast.error(error.message);
+        } else {
+          const user = data?.user ?? data?.session?.user;
+          if (user) {
+            await supabase.from('profiles').insert({
+              id: user.id,
+              email,
+              full_name: name,
+              role: 'student',
+            });
+            toast.success(t("lf.signupSuccess"));
+            nav({ to: "/dashboard/lms" });
+          } else {
+            toast.success(t("lf.checkEmail"));
+          }
+        }
+      } else {
+        const { data, error } = await signIn(email, password);
+        if (error) {
+          toast.error(error.message);
+        } else if (data.user) {
+          toast.success(t("lf.welcome"));
+          nav({ to: "/dashboard/lms" });
+        }
       }
     } catch (err) {
-      toast.error("Login failed");
+      toast.error("Authentication failed");
     } finally {
       setLoading(false);
     }
@@ -55,9 +79,20 @@ function LMSLogin() {
       </div>
       <div className="flex items-center justify-center p-6 lg:p-12">
         <form onSubmit={submit} className="w-full max-w-md bg-card rounded-3xl shadow-elegant p-8 border border-border">
-          <h1 className="text-2xl font-extrabold text-navy">{t("lf.lms.title")}</h1>
-          <p className="text-sm text-muted-foreground mb-6">{t("lf.lms.sub")}</p>
+          <h1 className="text-2xl font-extrabold text-navy">{mode === 'register' ? t("lf.lmsRegisterTitle") : t("lf.lms.title")}</h1>
+          <p className="text-sm text-muted-foreground mb-6">{mode === 'register' ? t("lf.lmsRegisterSub") : t("lf.lms.sub")}</p>
           <div className="space-y-4">
+            {mode === 'register' && (
+              <div>
+                <Label>{t("lf.fullName")}</Label>
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  required
+                />
+              </div>
+            )}
             <div>
               <Label>{t("lf.email")}</Label>
               <div className="relative mt-1">
@@ -88,9 +123,15 @@ function LMSLogin() {
               </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full bg-magenta hover:bg-magenta/90 text-white rounded-full h-11 font-bold">
-              {loading ? t("lf.signingIn") : t("lf.signIn")}
+              {loading ? (mode === 'register' ? t("lf.signingUp") : t("lf.signingIn")) : (mode === 'register' ? t("lf.signUp") : t("lf.signIn"))}
             </Button>
-            <p className="text-xs text-center text-muted-foreground">{t("lf.demo")}</p>
+            <p className="text-xs text-center text-muted-foreground">
+              {mode === 'login' ? (
+                <button type="button" onClick={() => setMode('register')} className="underline text-magenta">{t("lf.createAccount")}</button>
+              ) : (
+                <button type="button" onClick={() => setMode('login')} className="underline text-magenta">{t("lf.alreadyHaveAccount")}</button>
+              )}
+            </p>
           </div>
         </form>
       </div>

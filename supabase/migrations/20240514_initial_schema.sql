@@ -14,6 +14,12 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Admin indicators table
+CREATE TABLE IF NOT EXISTS public.admins (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
 -- Courses table
 CREATE TABLE IF NOT EXISTS public.courses (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -99,6 +105,7 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
 
 -- Enable RLS on all tables
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.certifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trainings ENABLE ROW LEVEL SECURITY;
@@ -107,6 +114,14 @@ ALTER TABLE public.careers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.enrollments ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
+-- Admins table: Users can manage their own admin row
+DROP POLICY IF EXISTS "Admins can view own admin row" ON public.admins;
+CREATE POLICY "Admins can view own admin row" ON public.admins FOR SELECT USING (auth.uid() = id);
+DROP POLICY IF EXISTS "Admins can insert own admin row" ON public.admins;
+CREATE POLICY "Admins can insert own admin row" ON public.admins FOR INSERT WITH CHECK (auth.uid() = id);
+DROP POLICY IF EXISTS "Admins can delete own admin row" ON public.admins;
+CREATE POLICY "Admins can delete own admin row" ON public.admins FOR DELETE USING (auth.uid() = id);
+
 -- Profiles: Users can read/update their own profile, admins can read all
 DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
@@ -116,7 +131,7 @@ DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 DROP POLICY IF EXISTS "Admins can view all profiles" ON public.profiles;
 CREATE POLICY "Admins can view all profiles" ON public.profiles FOR SELECT USING (
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid())
 );
 
 -- Courses: Everyone can read, only admins can modify
@@ -124,7 +139,7 @@ DROP POLICY IF EXISTS "Public read courses" ON public.courses;
 CREATE POLICY "Public read courses" ON public.courses FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Admins can manage courses" ON public.courses;
 CREATE POLICY "Admins can manage courses" ON public.courses FOR ALL USING (
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid())
 );
 
 -- Similar policies for other tables
@@ -132,28 +147,28 @@ DROP POLICY IF EXISTS "Public read certifications" ON public.certifications;
 CREATE POLICY "Public read certifications" ON public.certifications FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Admins can manage certifications" ON public.certifications;
 CREATE POLICY "Admins can manage certifications" ON public.certifications FOR ALL USING (
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid())
 );
 
 DROP POLICY IF EXISTS "Public read trainings" ON public.trainings;
 CREATE POLICY "Public read trainings" ON public.trainings FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Admins can manage trainings" ON public.trainings;
 CREATE POLICY "Admins can manage trainings" ON public.trainings FOR ALL USING (
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid())
 );
 
 DROP POLICY IF EXISTS "Public read academic_programs" ON public.academic_programs;
 CREATE POLICY "Public read academic_programs" ON public.academic_programs FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Admins can manage academic_programs" ON public.academic_programs;
 CREATE POLICY "Admins can manage academic_programs" ON public.academic_programs FOR ALL USING (
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid())
 );
 
 DROP POLICY IF EXISTS "Public read careers" ON public.careers;
 CREATE POLICY "Public read careers" ON public.careers FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Admins can manage careers" ON public.careers;
 CREATE POLICY "Admins can manage careers" ON public.careers FOR ALL USING (
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid())
 );
 
 -- Enrollments: Students can view their own, admins can view all
@@ -165,7 +180,7 @@ DROP POLICY IF EXISTS "Students can update own enrollments" ON public.enrollment
 CREATE POLICY "Students can update own enrollments" ON public.enrollments FOR UPDATE USING (auth.uid() = student_id);
 DROP POLICY IF EXISTS "Admins can manage enrollments" ON public.enrollments;
 CREATE POLICY "Admins can manage enrollments" ON public.enrollments FOR ALL USING (
-  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+  EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid())
 );
 
 -- Function to handle new user profiles
@@ -194,9 +209,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Triggers for updated_at
+DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DROP TRIGGER IF EXISTS update_courses_updated_at ON public.courses;
 CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DROP TRIGGER IF EXISTS update_certifications_updated_at ON public.certifications;
 CREATE TRIGGER update_certifications_updated_at BEFORE UPDATE ON public.certifications FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DROP TRIGGER IF EXISTS update_trainings_updated_at ON public.trainings;
 CREATE TRIGGER update_trainings_updated_at BEFORE UPDATE ON public.trainings FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DROP TRIGGER IF EXISTS update_academic_programs_updated_at ON public.academic_programs;
 CREATE TRIGGER update_academic_programs_updated_at BEFORE UPDATE ON public.academic_programs FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+DROP TRIGGER IF EXISTS update_careers_updated_at ON public.careers;
 CREATE TRIGGER update_careers_updated_at BEFORE UPDATE ON public.careers FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();

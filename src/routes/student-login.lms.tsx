@@ -32,7 +32,12 @@ function LMSLogin() {
       if (mode === 'register') {
         const { data, error } = await signUp(email, password, { full_name: name });
         if (error) {
-          toast.error(error.message);
+          if (error.message.toLowerCase().includes('already registered')) {
+            toast.error("Account already exists. Please sign in.");
+            setMode('login');
+          } else {
+            toast.error(error.message);
+          }
         } else {
           const user = data?.user ?? data?.session?.user;
           if (user) {
@@ -45,7 +50,8 @@ function LMSLogin() {
             toast.success(t("lf.signupSuccess"));
             nav({ to: "/dashboard/lms" });
           } else {
-            toast.success(t("lf.checkEmail"));
+            toast.success("Signup successful. Please sign in.");
+            setMode('login');
           }
         }
       } else {

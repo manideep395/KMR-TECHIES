@@ -32,9 +32,13 @@ function SISLogin() {
       if (mode === 'register') {
         const { data, error } = await signUp(email, password, { full_name: name });
         if (error) {
-          toast.error(error.message);
+          if (error.message.toLowerCase().includes('already registered')) {
+            toast.error("Account already exists. Please sign in.");
+            setMode('login');
+          } else {
+            toast.error(error.message);
+          }
         } else {
-          toast.success(t("lf.signupSuccess"));
           const user = data?.user ?? data?.session?.user;
           if (user) {
             await supabase.from('profiles').insert({
@@ -43,9 +47,11 @@ function SISLogin() {
               full_name: name,
               role: 'student',
             });
+            toast.success(t("lf.signupSuccess"));
             nav({ to: "/student-login/sis/dashboard" });
           } else {
-            toast.success(t("lf.checkEmail"));
+            toast.success("Signup successful. Please sign in.");
+            setMode('login');
           }
         }
       } else {

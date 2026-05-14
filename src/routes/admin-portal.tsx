@@ -32,8 +32,8 @@ function AdminPortal() {
   const [adminPassword, setAdminPassword] = useState("");
   const [adminLoading, setAdminLoading] = useState(false);
   const [showAdminPassword, setShowAdminPassword] = useState(false);
-  const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL ?? "admin@kmrtechies.com";
-  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? "admin@123";
+  const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL ?? "kasireddy@gmail.com";
+  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? "mani@395";
   const ADMIN_NAME = import.meta.env.VITE_ADMIN_NAME ?? "Admin User";
 
   // Real-time data
@@ -86,12 +86,12 @@ function AdminPortal() {
             const user = signupData?.user ?? signupData?.session?.user;
             if (user) {
               await supabase.from('profiles').upsert({ id: user.id, email: adminEmail, full_name: ADMIN_NAME, role: 'admin' });
-              await supabase.from('admins').upsert({ id: user.id });
+              await (supabase.from('admins' as any) as any).upsert({ id: user.id });
               toast.success("Admin account created and signed in");
               setAdminEmail("");
               setAdminPassword("");
             } else {
-              toast.success("Admin signup initiated. Check your email if confirmation is required.");
+              toast.success("Admin signup successful. Please sign in.");
             }
           }
         } else if (data.user) {
@@ -130,7 +130,7 @@ function AdminPortal() {
                   type="email"
                   value={adminEmail}
                   onChange={e => setAdminEmail(e.target.value)}
-                  placeholder={import.meta.env.VITE_ADMIN_EMAIL || "admin@kmrtechies.com"}
+                  placeholder={import.meta.env.VITE_ADMIN_EMAIL || "kasireddy@gmail.com"}
                   required
                 />
               </div>
@@ -155,7 +155,7 @@ function AdminPortal() {
                 {adminLoading ? "Signing in..." : "Sign In"}
               </Button>
               <p className="text-xs text-center text-muted-foreground mt-4">
-                Demo credentials: {import.meta.env.VITE_ADMIN_EMAIL || "admin@kmrtechies.com"} / {import.meta.env.VITE_ADMIN_PASSWORD || "admin@123"}
+                Demo credentials: {import.meta.env.VITE_ADMIN_EMAIL || "kasireddy@gmail.com"} / {import.meta.env.VITE_ADMIN_PASSWORD || "mani@395"}
               </p>
             </div>
           </form>
@@ -191,7 +191,7 @@ function AdminPortal() {
 
   const handleAddItem = async (type: string, data: any) => {
     try {
-      const { error } = await supabase.from(type).insert(data);
+      const { error } = await (supabase.from(type as any) as any).insert(data);
       if (error) throw error;
       toast.success("Item added successfully");
       setNewItem(null);
@@ -202,7 +202,7 @@ function AdminPortal() {
 
   const handleUpdateItem = async (type: string, id: string, data: any) => {
     try {
-      const { error } = await supabase.from(type).update(data).eq('id', id);
+      const { error } = await (supabase.from(type as any) as any).update(data).eq('id', id);
       if (error) throw error;
       toast.success("Item updated successfully");
       setEditItem(null);
@@ -214,7 +214,7 @@ function AdminPortal() {
   const handleDeleteItem = async (type: string, id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-      const { error } = await supabase.from(type).delete().eq('id', id);
+      const { error } = await (supabase.from(type as any) as any).delete().eq('id', id);
       if (error) throw error;
       toast.success("Item deleted successfully");
     } catch (error) {

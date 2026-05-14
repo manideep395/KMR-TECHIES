@@ -60,7 +60,9 @@ function AdminPortal() {
     const handleAdminLogin = async (e: FormEvent) => {
       e.preventDefault();
       setAdminLoading(true);
-      if (adminEmail !== ADMIN_EMAIL || adminPassword !== ADMIN_PASSWORD) {
+      const enteredEmail = adminEmail.trim().toLowerCase();
+      const enteredPassword = adminPassword.trim();
+      if (enteredEmail !== ADMIN_EMAIL.toLowerCase() || enteredPassword !== ADMIN_PASSWORD) {
         toast.error("Invalid admin credentials");
         setAdminLoading(false);
         return;
@@ -130,7 +132,7 @@ function AdminPortal() {
                   type="email"
                   value={adminEmail}
                   onChange={e => setAdminEmail(e.target.value)}
-                  placeholder={import.meta.env.VITE_ADMIN_EMAIL || "kasireddy@gmail.com"}
+                  placeholder={ADMIN_EMAIL}
                   required
                 />
               </div>
@@ -155,7 +157,7 @@ function AdminPortal() {
                 {adminLoading ? "Signing in..." : "Sign In"}
               </Button>
               <p className="text-xs text-center text-muted-foreground mt-4">
-                Demo credentials: {import.meta.env.VITE_ADMIN_EMAIL || "kasireddy@gmail.com"} / {import.meta.env.VITE_ADMIN_PASSWORD || "mani@395"}
+                Demo credentials: {ADMIN_EMAIL} / {ADMIN_PASSWORD}
               </p>
             </div>
           </form>

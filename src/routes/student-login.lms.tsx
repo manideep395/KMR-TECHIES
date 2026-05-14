@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/student-login/lms")({
   head: () => ({ meta: [{ title: "LMS Login — KMR Technologies" }] }),
@@ -15,22 +16,28 @@ export const Route = createFileRoute("/student-login/lms")({
 function LMSLogin() {
   const nav = useNavigate();
   const { t } = useT();
-  const [id, setId] = useState("KMR2025001");
-  const [pw, setPw] = useState("demo1234");
+  const { signIn } = useAuth();
+  const [email, setEmail] = useState("demo@kmrtechies.com");
+  const [password, setPassword] = useState("demo1234");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      if (id && pw) {
-        sessionStorage.setItem("lms_user", JSON.stringify({ id: "KMR-102", name: "K. Manideep" }));
+    try {
+      const { data, error } = await signIn(email, password);
+      if (error) {
+        toast.error(error.message);
+      } else if (data.user) {
         toast.success(t("lf.welcome"));
         nav({ to: "/dashboard/lms" });
-      } else { toast.error("Invalid credentials"); }
+      }
+    } catch (err) {
+      toast.error("Login failed");
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   }
 
   return (
@@ -52,21 +59,37 @@ function LMSLogin() {
           <p className="text-sm text-muted-foreground mb-6">{t("lf.lms.sub")}</p>
           <div className="space-y-4">
             <div>
-              <Label>{t("lf.studentId")}</Label>
+              <Label>{t("lf.email")}</Label>
               <div className="relative mt-1">
                 <User className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                <Input value={id} onChange={e=>setId(e.target.value)} className="pl-9" />
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="pl-9"
+                  required
+                />
               </div>
             </div>
             <div>
               <Label>{t("lf.password")}</Label>
               <div className="relative mt-1">
                 <Lock className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
-                <Input type={show?"text":"password"} value={pw} onChange={e=>setPw(e.target.value)} className="pl-9 pr-9" />
-                <button type="button" onClick={()=>setShow(!show)} className="absolute right-3 top-3 text-muted-foreground">{show?<EyeOff className="h-4 w-4"/>:<Eye className="h-4 w-4"/>}</button>
+                <Input
+                  type={show ? "text" : "password"}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="pl-9 pr-9"
+                  required
+                />
+                <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-3 text-muted-foreground">
+                  {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
-            <Button type="submit" disabled={loading} className="w-full bg-magenta hover:bg-magenta/90 text-white rounded-full h-11 font-bold">{loading?t("lf.signingIn"):t("lf.signIn")}</Button>
+            <Button type="submit" disabled={loading} className="w-full bg-magenta hover:bg-magenta/90 text-white rounded-full h-11 font-bold">
+              {loading ? t("lf.signingIn") : t("lf.signIn")}
+            </Button>
             <p className="text-xs text-center text-muted-foreground">{t("lf.demo")}</p>
           </div>
         </form>

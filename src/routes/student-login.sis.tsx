@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/student-login/sis")({
   head: () => ({ meta: [{ title: "SIS Login — KMR Technologies" }, { name: "description", content: "Sign in to the Student Information System." }] }),
@@ -16,9 +17,11 @@ export const Route = createFileRoute("/student-login/sis")({
 function SISLogin() {
   const nav = useNavigate();
   const { t } = useT();
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
+  const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState("demo@kmrtechies.com");
   const [password, setPassword] = useState("demo1234");
+  const [name, setName] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -26,15 +29,36 @@ function SISLogin() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data, error } = await signIn(email, password);
-      if (error) {
-        toast.error(error.message);
-      } else if (data.user) {
-        toast.success(t("lf.welcome"));
-        nav({ to: "/student-login/sis/dashboard" });
+      if (mode === 'register') {
+        const { data, error } = await signUp(email, password, { full_name: name });
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success(t("lf.signupSuccess"));
+          const user = data?.user ?? data?.session?.user;
+          if (user) {
+            await supabase.from('profiles').insert({
+              id: user.id,
+              email,
+              full_name: name,
+              role: 'student',
+            });
+            nav({ to: "/student-login/sis/dashboard" });
+          } else {
+            toast.success(t("lf.checkEmail"));
+          }
+        }
+      } else {
+        const { data, error } = await signIn(email, password);
+        if (error) {
+          toast.error(error.message);
+        } else if (data.user) {
+          toast.success(t("lf.welcome"));
+          nav({ to: "/student-login/sis/dashboard" });
+        }
       }
     } catch (err) {
-      toast.error("Login failed");
+      toast.error("Authentication failed");
     } finally {
       setLoading(false);
     }
@@ -58,6 +82,17 @@ function SISLogin() {
           <h1 className="text-2xl font-extrabold text-navy">{t("lf.sis.title")}</h1>
           <p className="text-sm text-muted-foreground mb-6">{t("lf.sis.sub")}</p>
           <div className="space-y-4">
+            {mode === 'register' && (
+              <div>
+                <Label>{t("lf.fullName")}</Label>
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  required
+                />
+              </div>
+            )}
             <div>
               <Label>{t("lf.email")}</Label>
               <div className="relative mt-1">
@@ -88,9 +123,15 @@ function SISLogin() {
               </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full bg-magenta hover:bg-magenta/90 text-white rounded-full h-11 font-bold">
-              {loading ? t("lf.signingIn") : t("lf.signIn")}
+              {loading ? (mode === 'register' ? t("lf.signingUp") : t("lf.signingIn")) : (mode === 'register' ? t("lf.signUp") : t("lf.signIn"))}
             </Button>
-            <p className="text-xs text-center text-muted-foreground">{t("lf.demo")}</p>
+            <p className="text-xs text-center text-muted-foreground">
+              {mode === 'login' ? (
+                <button type="button" onClick={() => setMode('register')} className="underline text-magenta">{t("lf.createAccount")}</button>
+              ) : (
+                <button type="button" onClick={() => setMode('login')} className="underline text-magenta">{t("lf.alreadyHaveAccount")}</button>
+              )}
+            </p>
           </div>
         </form>
       </div>

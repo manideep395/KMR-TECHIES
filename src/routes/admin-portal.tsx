@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Users, BookOpen, TrendingUp, Inbox, Search, Plus, Edit, Trash2, Eye, GraduationCap, UserCog, FileUp, IndianRupee, X, Loader2 } from "lucide-react";
+import { Users, BookOpen, TrendingUp, Inbox, Search, Plus, Edit, Trash2, Eye, GraduationCap, UserCog, FileUp, IndianRupee, X, Loader2, Lock, Eye as EyeIcon, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -21,10 +22,16 @@ export const Route = createFileRoute("/admin-portal")({
 
 function AdminPortal() {
   const { t } = useT();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signIn } = useAuth();
   const [q, setQ] = useState("");
   const [editItem, setEditItem] = useState<any | null>(null);
   const [newItem, setNewItem] = useState<{ type: string; data: any } | null>(null);
+
+  // Admin login form state
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+  const [adminLoading, setAdminLoading] = useState(false);
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
 
   // Real-time data
   const { data: courses, loading: coursesLoading } = useRealtimeData<Tables<'courses'>>('courses');
@@ -42,12 +49,95 @@ function AdminPortal() {
     );
   }
 
+  const currentProfile = profiles.find((profile) => profile.id === user?.id);
+  const isAdmin = currentProfile?.role === 'admin';
+
+  // If not logged in, show admin login form
   if (!user) {
+    const handleAdminLogin = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setAdminLoading(true);
+      try {
+        const { data, error } = await signIn(adminEmail, adminPassword);
+        if (error) {
+          toast.error(error.message);
+        } else if (data.user) {
+          toast.success("Admin login successful");
+          setAdminEmail("");
+          setAdminPassword("");
+        }
+      } catch (err) {
+        toast.error("Admin login failed");
+      } finally {
+        setAdminLoading(false);
+      }
+    };
+
+    return (
+      <div className="min-h-screen grid lg:grid-cols-2 bg-secondary">
+        <div className="hidden lg:flex bg-gradient-hero text-white p-12 flex-col justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-10 w-10 rounded-lg bg-gold grid place-items-center"><UserCog className="h-5 w-5 text-navy-deep" /></div>
+            <div className="font-extrabold">KMR · Admin</div>
+          </div>
+          <div>
+            <h2 className="text-4xl font-extrabold leading-tight">Admin Portal</h2>
+            <p className="text-white/70 mt-4 max-w-md">Manage courses, certifications, trainings, and students in real-time.</p>
+          </div>
+          <div className="text-xs text-white/50">© KMR Technologies</div>
+        </div>
+        <div className="flex items-center justify-center p-6 lg:p-12">
+          <form onSubmit={handleAdminLogin} className="w-full max-w-md bg-card rounded-3xl shadow-elegant p-8 border border-border">
+            <h1 className="text-2xl font-extrabold text-navy mb-2">Admin Login</h1>
+            <p className="text-sm text-muted-foreground mb-6">Enter your admin credentials to access the portal</p>
+            <div className="space-y-4">
+              <div>
+                <Label>Email</Label>
+                <Input
+                  type="email"
+                  value={adminEmail}
+                  onChange={e => setAdminEmail(e.target.value)}
+                  placeholder={import.meta.env.VITE_ADMIN_EMAIL || "admin@kmrtechies.com"}
+                  required
+                />
+              </div>
+              <div>
+                <Label>Password</Label>
+                <div className="relative mt-1">
+                  <Lock className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
+                  <Input
+                    type={showAdminPassword ? "text" : "password"}
+                    value={adminPassword}
+                    onChange={e => setAdminPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="pl-9 pr-9"
+                    required
+                  />
+                  <button type="button" onClick={() => setShowAdminPassword(!showAdminPassword)} className="absolute right-3 top-3 text-muted-foreground">
+                    {showAdminPassword ? <EyeOff className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+              <Button type="submit" disabled={adminLoading} className="w-full bg-magenta hover:bg-magenta/90 text-white rounded-full h-11 font-bold">
+                {adminLoading ? "Signing in..." : "Sign In"}
+              </Button>
+              <p className="text-xs text-center text-muted-foreground mt-4">
+                Demo credentials: {import.meta.env.VITE_ADMIN_EMAIL || "admin@kmrtechies.com"} / {import.meta.env.VITE_ADMIN_PASSWORD || "admin@123"}
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // If logged in but not admin, show access denied
+  if (!isAdmin) {
     return (
       <div className="min-h-screen bg-secondary flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">Access Denied</h1>
-          <p className="text-muted-foreground">You must be logged in as an admin to access this portal.</p>
+          <p className="text-muted-foreground">Your account does not have admin access.</p>
         </div>
       </div>
     );

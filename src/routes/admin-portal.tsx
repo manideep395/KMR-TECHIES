@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Users, BookOpen, TrendingUp, Inbox, Search, Plus, Edit, Trash2, Eye, GraduationCap, UserCog, FileUp, IndianRupee, X, Loader2, Lock, Eye as EyeIcon, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,7 +54,7 @@ function AdminPortal() {
 
   // If not logged in, show admin login form
   if (!user) {
-    const handleAdminLogin = async (e: React.FormEvent) => {
+    const handleAdminLogin = async (e: FormEvent) => {
       e.preventDefault();
       setAdminLoading(true);
       try {

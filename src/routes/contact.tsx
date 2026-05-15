@@ -33,9 +33,9 @@ function ContactPage() {
         <div className="container mx-auto px-4 lg:px-8 grid md:grid-cols-3 gap-8">
         <div className="space-y-6 md:col-span-1">
           {[
-            { i: MapPin, t: t("contact.office"), d: "12th Main, HSR Layout, Bengaluru, KA 560102" },
-            { i: Phone, t: t("contact.phone"), d: "+91 80 1234 5678" },
-            { i: Mail, t: t("contact.email"), d: "hello@kestech.in" },
+            { i: MapPin, t: t("contact.office"), d: "1-6-60,Above Bank of Maharashtra,Nallabavi road, suryapet" },
+            { i: Phone, t: t("contact.phone"), d: "+91 9966598898" },
+            { i: Mail, t: t("contact.email"), d: "Karthikeyaeducationalsociety@gmail.com" },
           ].map((c, i) => (
             <div key={i} className="flex gap-4">
               <div className="h-12 w-12 rounded-xl bg-gold/15 text-gold grid place-items-center shrink-0"><c.i className="h-5 w-5" /></div>

@@ -6,9 +6,9 @@ import heroImg from "@/assets/hero.jpg";
 import heroCareer from "@/assets/hero-career.png";
 import heroPlacement from "@/assets/hero-placement.png";
 import heroSkillIndia from "@/assets/hero-skillindia.png";
-import carouselClassroom from "@/assets/carousel-classroom.png";
-import carouselWorkshop from "@/assets/carousel-workshop.png";
-import carouselPlacement from "@/assets/carousel-placement.png";
+import carouselClassroom from "@/assets/carousel-classroom.jpg";
+import carouselWorkshop from "@/assets/carousel-workshop.jpg";
+import carouselPlacement from "@/assets/carousel-placement.jpg";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({

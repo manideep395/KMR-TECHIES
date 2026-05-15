@@ -57,7 +57,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">© {year} 2025 Karthikeya Educational Society. {t("footer.rights")}</div>
+      <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">© {year} Karthikeya Educational Society. {t("footer.rights")}</div>
     </footer>
   );
 }

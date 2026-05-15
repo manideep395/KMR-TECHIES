@@ -51,9 +51,9 @@ export function Footer() {
         <div>
           <h4 className="text-white font-semibold mb-4">{t("footer.contact")}</h4>
           <ul className="space-y-2 text-sm">
-            <li className="flex gap-2"><MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /><span>Address: 1-6-60,Above Bank of Maharashtra,Nallabavi road, suryapet</span></li>
-            <li className="flex gap-2"><Phone className="h-4 w-4 text-gold" /><span>+91 9966598898</span></li>
-            <li className="flex gap-2"><Mail className="h-4 w-4 text-gold" /><span>Karthikeyaeducationalsociety@gmail.com</span></li>
+            <li className="flex gap-2"><MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /><span>{t("contact.office")}: {t("contact.office.value")}</span></li>
+            <li className="flex gap-2"><Phone className="h-4 w-4 text-gold" /><span>{t("contact.phone.value")}</span></li>
+            <li className="flex gap-2"><Mail className="h-4 w-4 text-gold" /><span>{t("contact.email.value")}</span></li>
           </ul>
         </div>
       </div>

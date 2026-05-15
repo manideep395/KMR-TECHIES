@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ArrowRight, Sparkles, Briefcase, Award, Building2, Users, TrendingUp, ShieldCheck, Star, ChevronLeft, ChevronRight, Code2, Cloud, BarChart3, Zap, Globe, Lightbulb, Clock, GraduationCap, Building, CheckCircle2, Trophy, Heart } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
-import heroCareer from "@/assets/hero-career.png";
+import heroCareer from "@/assets/hero-career.jpg";
 import heroPlacement from "@/assets/hero-placement.png";
 import heroSkillIndia from "@/assets/hero-skillindia.png";
 import carouselClassroom from "@/assets/carousel-classroom.jpg";

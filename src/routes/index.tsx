@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
   head: () => ({ meta: [
     { title: "KMR Technologies — Your Course to Success" },
     { name: "description", content: "Industry-led training and guaranteed-placement programs from KMR Technologies. Get hired by tech employers." },
-    { property: "og:title", content: "KMR Technologies — Your Course to Success" },
+    { property: "og:title", content: "KES Technologies — Your Course to Success" },
     { property: "og:description", content: "Get trained by industry experts and hired by top tech employers." },
   ]}),
   component: Home,
@@ -270,7 +270,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ═══════ WHY KMR ═══════ */}
+      {/* ═══════ WHY KES ═══════ */}
       <section className="bg-navy-deep py-12 md:py-20 border-y border-white/10">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-2xl mb-12">

@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { GraduationCap, Lock, User, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,13 +17,19 @@ export const Route = createFileRoute("/student-login/lms")({
 function LMSLogin() {
   const nav = useNavigate();
   const { t } = useT();
-  const { signIn, signUp } = useAuth();
+  const { user, signIn, signUp } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState("demo@kmrtechies.com");
   const [password, setPassword] = useState("demo1234");
   const [name, setName] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      nav({ to: "/dashboard/lms" });
+    }
+  }, [user, nav]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -48,7 +54,11 @@ function LMSLogin() {
               role: 'student',
             });
             toast.success(t("lf.signupSuccess"));
-            nav({ to: "/dashboard/lms" });
+            sessionStorage.setItem("lms_user", JSON.stringify({
+              name: name,
+              id: user.id
+            }));
+            nav({ to: "/dashboard/lms", replace: true });
           } else {
             toast.success("Signup successful. Please sign in.");
             setMode('login');
@@ -58,9 +68,29 @@ function LMSLogin() {
         const { data, error } = await signIn(email, password);
         if (error) {
           toast.error(error.message);
-        } else if (data.user) {
-          toast.success(t("lf.welcome"));
-          nav({ to: "/dashboard/lms" });
+        } else {
+          const authUser = data?.user ?? data?.session?.user;
+          if (authUser) {
+            toast.success(t("lf.welcome"));
+            sessionStorage.setItem("lms_user", JSON.stringify({
+              name: authUser.user_metadata?.full_name || email,
+              id: authUser.id
+            }));
+            nav({ to: "/dashboard/lms", replace: true });
+          } else {
+            const sessionData = await supabase.auth.getSession();
+            const sessionUser = sessionData.data.session?.user;
+            if (sessionUser) {
+              toast.success(t("lf.welcome"));
+              sessionStorage.setItem("lms_user", JSON.stringify({
+                name: sessionUser.user_metadata?.full_name || email,
+                id: sessionUser.id
+              }));
+              nav({ to: "/dashboard/lms", replace: true });
+            } else {
+              toast.error("Login succeeded but user session was not available. Please refresh.");
+            }
+          }
         }
       }
     } catch (err) {

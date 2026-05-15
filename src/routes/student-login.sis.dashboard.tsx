@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { DashThemeToggle } from "@/components/site/DashThemeToggle";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/student-login/sis/dashboard")({
   head: () => ({ meta: [{ title: "SIS Dashboard — KMR Technologies" }, { name: "description", content: "Student dashboard." }] }),
@@ -39,23 +40,30 @@ const schedule = [
 
 function Dash() {
   const nav = useNavigate();
-  const [user, setUser] = useState<{ name: string; id: string } | null>(null);
+  const { user, loading, signOut } = useAuth();
   const [openAction, setOpenAction] = useState<null | "transcript" | "fees" | "timetable" | "profile" | "results" | "idcard" | "leave" | "feedback">(null);
 
   useEffect(() => {
-    const raw = sessionStorage.getItem("sis_user");
-    if (!raw) { nav({ to: "/student-login/sis" }); return; }
-    setUser(JSON.parse(raw));
-  }, [nav]);
+    if (!loading && !user) {
+      const timeout = window.setTimeout(() => {
+        nav({ to: "/student-login/sis", replace: true });
+      }, 500);
+      return () => window.clearTimeout(timeout);
+    }
+    return undefined;
+  }, [loading, user, nav]);
 
   const avgAttendance = useMemo(
     () => Math.round(courses.reduce((a, c) => a + c.attendance, 0) / courses.length),
     []
   );
 
-  function logout() { sessionStorage.removeItem("sis_user"); nav({ to: "/student-login" }); }
+  async function logout() {
+    await signOut();
+    nav({ to: "/student-login" });
+  }
 
-  if (!user) return null;
+  if (loading || !user) return null;
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -63,8 +71,8 @@ function Dash() {
         <div className="container mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2"><GraduationCap className="h-6 w-6 text-gold" /><span className="font-extrabold">KMR · SIS</span></Link>
           <div className="flex items-center gap-3">
-            <div className="text-right hidden sm:block"><div className="text-sm font-semibold">{user.name}</div><div className="text-xs text-white/60">{user.id}</div></div>
-            <div className="h-9 w-9 rounded-full bg-gold text-navy-deep grid place-items-center font-bold">{user.name.charAt(0)}</div>
+            <div className="text-right hidden sm:block"><div className="text-sm font-semibold">{user.user_metadata?.full_name || user.email}</div><div className="text-xs text-white/60">{user.id}</div></div>
+            <div className="h-9 w-9 rounded-full bg-gold text-navy-deep grid place-items-center font-bold">{(user.user_metadata?.full_name || user.email || "U").charAt(0)}</div>
             <DashThemeToggle />
             <Button onClick={logout} variant="ghost" size="sm" className="text-white hover:bg-white/10"><LogOut className="h-4 w-4 mr-1" /> Logout</Button>
           </div>

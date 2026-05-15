@@ -7,6 +7,7 @@ import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { DashThemeToggle } from "@/components/site/DashThemeToggle";
 import { useSharedStore, Course, Lesson } from "@/lib/store";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/dashboard/lms")({
   head: () => ({ meta: [{ title: "LMS Dashboard — KMR Technologies" }] }),
@@ -30,24 +31,28 @@ const LIVE = [
 function LMSDash() {
   const nav = useNavigate();
   const { t } = useT();
+  const { user, loading, signOut } = useAuth();
   const { state, updateCourse } = useSharedStore();
   const COURSES = state.courses;
-  const [authed, setAuthed] = useState(false);
   const [activeId, setActiveId] = useState(COURSES[0]?.id || "");
   const active = COURSES.find(c => c.id === activeId) || COURSES[0];
 
   useEffect(() => {
-    const raw = typeof window !== "undefined" ? sessionStorage.getItem("lms_user") : null;
-    if (!raw) { nav({ to: "/student-login/lms" }); return; }
-    setAuthed(true);
-  }, [nav]);
+    if (!loading && !user) {
+      const timeout = window.setTimeout(() => {
+        nav({ to: "/student-login/lms", replace: true });
+      }, 500);
+      return () => window.clearTimeout(timeout);
+    }
+    return undefined;
+  }, [loading, user, nav]);
 
-  function logout() {
-    sessionStorage.removeItem("lms_user");
+  async function logout() {
+    await signOut();
     nav({ to: "/student-login" });
   }
 
-  if (!authed) return null;
+  if (loading || !user) return null;
 
   const overallProgress = (() => {
     const totals = COURSES.reduce((acc, c) => {
@@ -77,7 +82,7 @@ function LMSDash() {
 
       <main className="container mx-auto px-4 lg:px-8 py-8 space-y-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">{t("lms.welcome")}, K. Manideep 👋</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">{t("lms.welcome")}, {user.user_metadata?.full_name || user.email} 👋</h1>
           <p className="text-muted-foreground text-sm">{t("lms.continue")}</p>
         </div>
 

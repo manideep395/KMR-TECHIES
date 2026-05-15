@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "vite build && mkdir -p netlify/functions && cp dist/server/server.js netlify/functions/server.js && cp -r dist/server/assets netlify/functions/ && echo '\nexport async function handler(event, context) {\n  return await server.fetch(new Request(event.rawUrl, {\n    method: event.httpMethod,\n    headers: event.headers,\n    body: event.body\n  }));\n}' >> netlify/functions/server.js",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "start": "vite preview --host",

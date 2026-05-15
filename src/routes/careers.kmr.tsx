@@ -5,8 +5,8 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/careers/kmr")({
   head: () => ({ meta: [
-    { title: "KMR Careers — Join Our Team" },
-    { name: "description", content: "Open roles at KMR Technologies across India." },
+    { title: "KES Careers — Join Our Team" },
+    { name: "description", content: "Open roles at KES Technologies across India." },
   ]}),
   component: KmrCareers,
 });

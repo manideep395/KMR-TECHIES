@@ -118,8 +118,8 @@ export function Header() {
               className="h-10 w-10 rounded-full object-contain bg-white p-0.5 shadow-md"
             />
             <div className="leading-tight">
-              <div className="text-white font-extrabold text-lg tracking-tight">KMR</div>
-              <div className="text-gold text-[10px] font-semibold uppercase tracking-widest">Technologies</div>
+              <div className="text-white font-extrabold text-lg tracking-tight">KES</div>
+              <div className="text-gold text-[10px] font-semibold uppercase tracking-widest">Karthikeya Educational Society</div>
             </div>
           </Link>
 

@@ -41,6 +41,7 @@ const schedule = [
 function Dash() {
   const nav = useNavigate();
   const { user, loading, signOut } = useAuth();
+  const displayName = user?.user_metadata?.full_name || user?.email || "Student";
   const [openAction, setOpenAction] = useState<null | "transcript" | "fees" | "timetable" | "profile" | "results" | "idcard" | "leave" | "feedback">(null);
 
   useEffect(() => {
@@ -81,7 +82,7 @@ function Dash() {
 
       <main className="container mx-auto px-4 lg:px-8 py-8">
         <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">Welcome back, {user.name.split(" ")[0]} 👋</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">Welcome back, {(user.user_metadata?.full_name || user.email || "Student").split(" ")[0]} 👋</h1>
           <p className="text-muted-foreground text-sm">Semester 5 · Batch 2024</p>
         </div>
 
@@ -248,11 +249,11 @@ function Dash() {
         <DialogContent>
           <DialogHeader><DialogTitle className="flex items-center gap-2"><User className="h-5 w-5" /> My Profile</DialogTitle></DialogHeader>
           <div className="space-y-2 text-sm">
-            <Row k="Name" v={user.name} />
+            <Row k="Name" v={displayName} />
             <Row k="Student ID" v={user.id} />
             <Row k="Program" v="B.Tech CSE" />
             <Row k="Batch" v="2024 – 2028" />
-            <Row k="Email" v={`${user.name.split(" ")[0].toLowerCase()}@kmr.edu`} />
+            <Row k="Email" v={`${displayName.split(" ")[0].toLowerCase()}@kmr.edu`} />
             <Row k="Mentor" v="Priya R." />
           </div>
         </DialogContent>
@@ -285,9 +286,9 @@ function Dash() {
           <DialogHeader><DialogTitle className="flex items-center gap-2"><IdCard className="h-5 w-5" /> Student ID Card</DialogTitle><DialogDescription>Your official KMR Technologies identity card</DialogDescription></DialogHeader>
           <div className="rounded-xl bg-gradient-to-br from-navy to-navy-deep text-white p-5 space-y-3">
             <div className="flex items-center gap-3">
-              <div className="h-14 w-14 rounded-full bg-gold text-navy-deep grid place-items-center font-bold text-2xl">{user.name.charAt(0)}</div>
+              <div className="h-14 w-14 rounded-full bg-gold text-navy-deep grid place-items-center font-bold text-2xl">{displayName.charAt(0)}</div>
               <div>
-                <div className="font-extrabold text-lg">{user.name}</div>
+                <div className="font-extrabold text-lg">{displayName}</div>
                 <div className="text-xs text-white/70">{user.id}</div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { FormEvent, useEffect, useState } from "react";
 import { GraduationCap, Lock, User, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ function LMSLogin() {
   const { t } = useT();
   const { user, signIn, signUp } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
+  const isLmsDashboardRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/student-login/lms/dashboard');
   const [email, setEmail] = useState("demo@kmrtechies.com");
   const [password, setPassword] = useState("demo1234");
   const [name, setName] = useState("");
@@ -26,10 +27,12 @@ function LMSLogin() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      nav({ to: "/dashboard/lms" });
-    }
+    // Removed automatic redirect to allow user choice when already logged in
   }, [user, nav]);
+
+  if (isLmsDashboardRoute) {
+    return <Outlet />;
+  }
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -45,7 +48,7 @@ function LMSLogin() {
             toast.error(error.message);
           }
         } else {
-          const user = data?.user ?? data?.session?.user;
+          const user = (data as any)?.user ?? (data as any)?.session?.user;
           if (user) {
             await supabase.from('profiles').insert({
               id: user.id,
@@ -69,7 +72,7 @@ function LMSLogin() {
         if (error) {
           toast.error(error.message);
         } else {
-          const authUser = data?.user ?? data?.session?.user;
+          const authUser = (data as any)?.user ?? (data as any)?.session?.user;
           if (authUser) {
             toast.success(t("lf.welcome"));
             sessionStorage.setItem("lms_user", JSON.stringify({
@@ -98,6 +101,41 @@ function LMSLogin() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (user) {
+    return (
+      <div className="min-h-screen grid lg:grid-cols-2 bg-secondary">
+        <div className="hidden lg:flex bg-gradient-hero text-white p-12 flex-col justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-10 w-10 rounded-lg bg-gold grid place-items-center"><GraduationCap className="h-5 w-5 text-navy-deep" /></div>
+            <div className="font-extrabold">KMR · LMS</div>
+          </div>
+          <div>
+            <h2 className="text-4xl font-extrabold leading-tight">Already Logged In</h2>
+            <p className="text-white/70 mt-4 max-w-md">You are currently logged in as {user.email}. What would you like to do?</p>
+          </div>
+          <div className="text-xs text-white/50">© KMR Technologies</div>
+        </div>
+        <div className="flex items-center justify-center p-6 lg:p-12">
+          <div className="w-full max-w-md bg-card rounded-3xl shadow-elegant p-8 border border-border">
+            <h1 className="text-2xl font-extrabold text-navy">Welcome back!</h1>
+            <p className="text-sm text-muted-foreground mb-6">You are already logged in as {user.email}.</p>
+            <div className="space-y-4">
+              <Button onClick={() => nav({ to: "/dashboard/lms" })} className="w-full bg-magenta hover:bg-magenta/90 text-white rounded-full h-11 font-bold">
+                Go to Dashboard
+              </Button>
+              <Button onClick={async () => {
+                await supabase.auth.signOut();
+                toast.success("Logged out successfully");
+              }} variant="outline" className="w-full rounded-full h-11 font-bold">
+                Logout & Sign In Again
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -19,8 +19,8 @@ export function Footer() {
               className="h-12 w-12 rounded-full object-contain bg-white p-0.5 shadow-md"
             />
             <div>
-              <div className="text-white font-extrabold">KMR</div>
-              <div className="text-gold text-[10px] font-semibold uppercase tracking-widest">Technologies</div>
+              <div className="text-white font-extrabold">KES</div>
+              <div className="text-gold text-[10px] font-semibold uppercase tracking-widest">Karthikeya Educational Society</div>
             </div>
           </div>
           <p className="text-sm">{t("footer.tagline")}</p>
@@ -51,13 +51,13 @@ export function Footer() {
         <div>
           <h4 className="text-white font-semibold mb-4">{t("footer.contact")}</h4>
           <ul className="space-y-2 text-sm">
-            <li className="flex gap-2"><MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /><span>Bengaluru, Karnataka, India</span></li>
-            <li className="flex gap-2"><Phone className="h-4 w-4 text-gold" /><span>+91 80 1234 5678</span></li>
-            <li className="flex gap-2"><Mail className="h-4 w-4 text-gold" /><span>hello@kmrtech.in</span></li>
+            <li className="flex gap-2"><MapPin className="h-4 w-4 text-gold shrink-0 mt-0.5" /><span>Address: 1-6-60,Above Bank of Maharashtra,Nallabavi road, suryapet</span></li>
+            <li className="flex gap-2"><Phone className="h-4 w-4 text-gold" /><span>+91 9966598898</span></li>
+            <li className="flex gap-2"><Mail className="h-4 w-4 text-gold" /><span>Karthikeyaeducationalsociety@gmail.com</span></li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">© {year} KMR Technologies. {t("footer.rights")}</div>
+      <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">© {year} 2025 Karthikeya Educational Society. {t("footer.rights")}</div>
     </footer>
   );
 }

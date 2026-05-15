@@ -23,7 +23,7 @@ import { Route as CoursesJobGuaranteedRouteImport } from './routes/courses.job-g
 import { Route as CoursesGovtSponsoredRouteImport } from './routes/courses.govt-sponsored'
 import { Route as CoursesCertificationRouteImport } from './routes/courses.certification'
 import { Route as CoursesAcademicRouteImport } from './routes/courses.academic'
-import { Route as CareersKmrRouteImport } from './routes/careers.kmr'
+import { Route as CareersKesRouteImport } from './routes/careers.kes'
 import { Route as CareersApprenticeshipAbroadRouteImport } from './routes/careers.apprenticeship-abroad'
 import { Route as StudentLoginSisDashboardRouteImport } from './routes/student-login.sis.dashboard'
 import { Route as EnrollCategoryCourseIdRouteImport } from './routes/enroll.$category.$courseId'
@@ -98,9 +98,9 @@ const CoursesAcademicRoute = CoursesAcademicRouteImport.update({
   path: '/courses/academic',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CareersKmrRoute = CareersKmrRouteImport.update({
-  id: '/careers/kmr',
-  path: '/careers/kmr',
+const CareersKesRoute = CareersKesRouteImport.update({
+  id: '/careers/kes',
+  path: '/careers/kes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersApprenticeshipAbroadRoute =
@@ -128,7 +128,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/student-login': typeof StudentLoginRouteWithChildren
   '/careers/apprenticeship-abroad': typeof CareersApprenticeshipAbroadRoute
-  '/careers/kmr': typeof CareersKmrRoute
+  '/careers/kes': typeof CareersKesRoute
   '/courses/academic': typeof CoursesAcademicRoute
   '/courses/certification': typeof CoursesCertificationRoute
   '/courses/govt-sponsored': typeof CoursesGovtSponsoredRoute
@@ -147,7 +147,7 @@ export interface FileRoutesByTo {
   '/admin-portal': typeof AdminPortalRoute
   '/contact': typeof ContactRoute
   '/careers/apprenticeship-abroad': typeof CareersApprenticeshipAbroadRoute
-  '/careers/kmr': typeof CareersKmrRoute
+  '/careers/kes': typeof CareersKesRoute
   '/courses/academic': typeof CoursesAcademicRoute
   '/courses/certification': typeof CoursesCertificationRoute
   '/courses/govt-sponsored': typeof CoursesGovtSponsoredRoute
@@ -168,7 +168,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/student-login': typeof StudentLoginRouteWithChildren
   '/careers/apprenticeship-abroad': typeof CareersApprenticeshipAbroadRoute
-  '/careers/kmr': typeof CareersKmrRoute
+  '/careers/kes': typeof CareersKesRoute
   '/courses/academic': typeof CoursesAcademicRoute
   '/courses/certification': typeof CoursesCertificationRoute
   '/courses/govt-sponsored': typeof CoursesGovtSponsoredRoute
@@ -190,7 +190,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/student-login'
     | '/careers/apprenticeship-abroad'
-    | '/careers/kmr'
+    | '/careers/kes'
     | '/courses/academic'
     | '/courses/certification'
     | '/courses/govt-sponsored'
@@ -209,7 +209,7 @@ export interface FileRouteTypes {
     | '/admin-portal'
     | '/contact'
     | '/careers/apprenticeship-abroad'
-    | '/careers/kmr'
+    | '/careers/kes'
     | '/courses/academic'
     | '/courses/certification'
     | '/courses/govt-sponsored'
@@ -229,7 +229,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/student-login'
     | '/careers/apprenticeship-abroad'
-    | '/careers/kmr'
+    | '/careers/kes'
     | '/courses/academic'
     | '/courses/certification'
     | '/courses/govt-sponsored'
@@ -250,7 +250,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   StudentLoginRoute: typeof StudentLoginRouteWithChildren
   CareersApprenticeshipAbroadRoute: typeof CareersApprenticeshipAbroadRoute
-  CareersKmrRoute: typeof CareersKmrRoute
+  CareersKesRoute: typeof CareersKesRoute
   CoursesAcademicRoute: typeof CoursesAcademicRoute
   CoursesCertificationRoute: typeof CoursesCertificationRoute
   CoursesGovtSponsoredRoute: typeof CoursesGovtSponsoredRoute
@@ -360,11 +360,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesAcademicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/careers/kmr': {
-      id: '/careers/kmr'
-      path: '/careers/kmr'
-      fullPath: '/careers/kmr'
-      preLoaderRoute: typeof CareersKmrRouteImport
+    '/careers/kes': {
+      id: '/careers/kes'
+      path: '/careers/kes'
+      fullPath: '/careers/kes'
+      preLoaderRoute: typeof CareersKesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/careers/apprenticeship-abroad': {
@@ -426,7 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   StudentLoginRoute: StudentLoginRouteWithChildren,
   CareersApprenticeshipAbroadRoute: CareersApprenticeshipAbroadRoute,
-  CareersKmrRoute: CareersKmrRoute,
+  CareersKesRoute: CareersKesRoute,
   CoursesAcademicRoute: CoursesAcademicRoute,
   CoursesCertificationRoute: CoursesCertificationRoute,
   CoursesGovtSponsoredRoute: CoursesGovtSponsoredRoute,

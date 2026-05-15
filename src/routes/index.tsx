@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import { ArrowRight, Sparkles, Briefcase, Award, Building2, Users, TrendingUp, ShieldCheck, Star, ChevronLeft, ChevronRight, Code2, Cloud, BarChart3, Zap, Globe, Lightbulb } from "lucide-react";
+import { ArrowRight, Sparkles, Briefcase, Award, Building2, Users, TrendingUp, ShieldCheck, Star, ChevronLeft, ChevronRight, Code2, Cloud, BarChart3, Zap, Globe, Lightbulb, Clock, GraduationCap, Building, CheckCircle2, Trophy, Heart } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import heroCareer from "@/assets/hero-career.png";
 import heroPlacement from "@/assets/hero-placement.png";
@@ -13,8 +13,8 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "KMR Technologies — Your Course to Success" },
-    { name: "description", content: "Industry-led training and guaranteed-placement programs from KMR Technologies. Get hired by tech employers." },
+    { title: "KES Technologies — Your Course to Success" },
+    { name: "description", content: "Industry-led training and guaranteed-placement programs from KES Technologies. Get hired by tech employers." },
     { property: "og:title", content: "KES Technologies — Your Course to Success" },
     { property: "og:description", content: "Get trained by industry experts and hired by top tech employers." },
   ]}),
@@ -273,17 +273,23 @@ function Home() {
       {/* ═══════ WHY KES ═══════ */}
       <section className="bg-navy-deep py-12 md:py-20 border-y border-white/10">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-2xl mb-12">
+          <div className="max-w-3xl mb-12">
             <div className="text-xs uppercase font-bold tracking-widest text-gold">{t("why.eyebrow")}</div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-2">{t("why.title")}</h2>
+            <p className="text-lg text-white/70 mt-4">{t("why.sub")}</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { i: Users, t: t("why.f1.title"), d: t("why.f1.desc") },
-              { i: TrendingUp, t: t("why.f2.title"), d: t("why.f2.desc") },
-              { i: ShieldCheck, t: t("why.f3.title"), d: t("why.f3.desc") },
-            ].map(f => (
-              <div key={f.t} className="rounded-2xl bg-white/5 border border-white/10 p-6 hover:border-gold/40 transition">
+              { i: Clock, t: t("why.f1.title"), d: t("why.f1.desc") },
+              { i: GraduationCap, t: t("why.f2.title"), d: t("why.f2.desc") },
+              { i: Users, t: t("why.f3.title"), d: t("why.f3.desc") },
+              { i: Building, t: t("why.f4.title"), d: t("why.f4.desc") },
+              { i: CheckCircle2, t: t("why.f5.title"), d: t("why.f5.desc") },
+              { i: Trophy, t: t("why.f6.title"), d: t("why.f6.desc") },
+              { i: Heart, t: t("why.f7.title"), d: t("why.f7.desc") },
+              { i: Globe, t: t("why.f8.title"), d: t("why.f8.desc") },
+            ].map((f, idx) => (
+              <div key={idx} className="rounded-2xl bg-white/5 border border-white/10 p-6 hover:border-gold/40 transition">
                 <div className="h-12 w-12 rounded-xl bg-gold/15 text-gold grid place-items-center mb-4"><f.i className="h-6 w-6" /></div>
                 <h3 className="font-bold text-white">{f.t}</h3>
                 <p className="text-sm text-white/70 mt-1">{f.d}</p>
@@ -302,9 +308,9 @@ function Home() {
           </div>
           <div className="grid md:grid-cols-3 gap-4">
             {[
-              { n: "Priya R.", r: t("testi.role1"), q: t("testi.q1") },
-              { n: "Arjun M.", r: t("testi.role2"), q: t("testi.q2") },
-              { n: "Sana K.", r: t("testi.role3"), q: t("testi.q3") },
+              { n: "B. Nageshwari", r: t("testi.role1"), q: t("testi.q1") },
+              { n: "D. Tulasi", r: t("testi.role2"), q: t("testi.q2") },
+              { n: "Harichanda Prasad", r: t("testi.role3"), q: t("testi.q3") },
             ].map(t => (
               <div key={t.n} className="rounded-2xl bg-card border border-border p-6 hover:border-gold/40 hover:shadow-elegant transition">
                 <div className="flex gap-0.5 text-gold mb-3">{Array.from({length:5}).map((_,i)=>(<Star key={i} className="h-4 w-4 fill-current" />))}</div>

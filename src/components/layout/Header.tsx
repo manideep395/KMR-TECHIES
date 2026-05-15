@@ -4,7 +4,7 @@ import { Menu, X, ChevronDown, Briefcase, Award, BookOpen, Building2, Plane, Log
 import { cn } from "@/lib/utils";
 import { useT, LANGUAGES, type Lang } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
-import kmrLogo from "@/assets/kmr-logo.png";
+import kesLogo from "@/assets/kes-logo.png";
 
 function LangSwitcher({ mobile = false }: { mobile?: boolean }) {
   const { lang, setLang } = useT();
@@ -103,7 +103,7 @@ export function Header() {
     { title: t("courses.academic"), desc: t("courses.academic.desc"), icon: BookOpen, to: "/courses/academic" },
   ];
   const careerItems = [
-    { title: t("careers.kmr"), desc: t("careers.kmr.desc"), icon: Briefcase, to: "/careers/kmr" },
+    { title: t("careers.kes"), desc: t("careers.kes.desc"), icon: Briefcase, to: "/careers/kes" },
     { title: t("careers.abroad"), desc: t("careers.abroad.desc"), icon: Plane, to: "/careers/apprenticeship-abroad" },
   ];
 
@@ -113,7 +113,7 @@ export function Header() {
         <div className="flex h-16 lg:h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <img
-              src={kmrLogo}
+              src={kesLogo}
               alt="Karthikeya Educational Society"
               className="h-10 w-10 rounded-full object-contain bg-white p-0.5 shadow-md"
             />

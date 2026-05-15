@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, Instagram } from "lucide-react";
 import { useT } from "@/lib/i18n";
-import kmrLogo from "@/assets/kmr-logo.png";
+import kesLogo from "@/assets/kes-logo.png";
 
 export function Footer() {
   const { t } = useT();
@@ -14,7 +14,7 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-2.5 mb-4">
             <img
-              src={kmrLogo}
+              src={kesLogo}
               alt="Karthikeya Educational Society"
               className="h-12 w-12 rounded-full object-contain bg-white p-0.5 shadow-md"
             />
@@ -43,7 +43,7 @@ export function Footer() {
           <h4 className="text-white font-semibold mb-4">{t("footer.company")}</h4>
           <ul className="space-y-2 text-sm">
             <li><Link to="/about" className="hover:text-gold">{t("nav.about")}</Link></li>
-            <li><Link to="/careers/kmr" className="hover:text-gold">{t("careers.kmr")}</Link></li>
+            <li><Link to="/careers/kes" className="hover:text-gold">{t("careers.kes")}</Link></li>
             <li><Link to="/careers/apprenticeship-abroad" className="hover:text-gold">{t("careers.abroad")}</Link></li>
             <li><Link to="/contact" className="hover:text-gold">{t("nav.contact")}</Link></li>
           </ul>

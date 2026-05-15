@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/student-login/sis")({
-  head: () => ({ meta: [{ title: "SIS Login — KMR Technologies" }, { name: "description", content: "Sign in to the Student Information System." }] }),
+  head: () => ({ meta: [{ title: "SIS Login — KES Technologies" }, { name: "description", content: "Sign in to the Student Information System." }] }),
   component: SISLogin,
 });
 
@@ -20,7 +20,7 @@ function SISLogin() {
   const { user, signIn, signUp } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const isSisDashboardRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/student-login/sis/dashboard');
-  const [email, setEmail] = useState("demo@kmrtechies.com");
+  const [email, setEmail] = useState("demo@kestechies.com");
   const [password, setPassword] = useState("demo1234");
   const [name, setName] = useState("");
   const [show, setShow] = useState(false);
@@ -109,13 +109,13 @@ function SISLogin() {
         <div className="hidden lg:flex bg-gradient-hero text-white p-12 flex-col justify-between">
           <div className="flex items-center gap-2">
             <div className="h-10 w-10 rounded-lg bg-gold grid place-items-center"><Database className="h-5 w-5 text-navy-deep" /></div>
-            <div className="font-extrabold">KMR · SIS</div>
+            <div className="font-extrabold">KES · SIS</div>
           </div>
           <div>
             <h2 className="text-4xl font-extrabold leading-tight">Already Logged In</h2>
             <p className="text-white/70 mt-4 max-w-md">You are currently logged in as {user.email}. What would you like to do?</p>
           </div>
-          <div className="text-xs text-white/50">© KMR Technologies</div>
+          <div className="text-xs text-white/50">© KES Technologies</div>
         </div>
         <div className="flex items-center justify-center p-6 lg:p-12">
           <div className="w-full max-w-md bg-card rounded-3xl shadow-elegant p-8 border border-border">
@@ -143,13 +143,13 @@ function SISLogin() {
       <div className="hidden lg:flex bg-gradient-hero text-white p-12 flex-col justify-between">
         <div className="flex items-center gap-2">
           <div className="h-10 w-10 rounded-lg bg-gold grid place-items-center"><Database className="h-5 w-5 text-navy-deep" /></div>
-          <div className="font-extrabold">KMR · SIS</div>
+          <div className="font-extrabold">KES · SIS</div>
         </div>
         <div>
           <h2 className="text-4xl font-extrabold leading-tight">{t("lf.headline.sis")}</h2>
           <p className="text-white/70 mt-4 max-w-md">{t("lf.sub.sis")}</p>
         </div>
-        <div className="text-xs text-white/50">© KMR Technologies</div>
+        <div className="text-xs text-white/50">© KES Technologies</div>
       </div>
       <div className="flex items-center justify-center p-6 lg:p-12">
         <form onSubmit={submit} className="w-full max-w-md bg-card rounded-3xl shadow-elegant p-8 border border-border">

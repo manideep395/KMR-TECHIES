@@ -7,9 +7,9 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/student-login/")({
   head: () => ({ meta: [
-    { title: "Student Login — KMR Technologies" },
+    { title: "Student Login — KES Technologies" },
     { name: "description", content: "Access your Student Information System (SIS) or Learning Management System (LMS)." },
-    { property: "og:title", content: "Student Portals — KMR Technologies" },
+    { property: "og:title", content: "Student Portals — KES Technologies" },
     { property: "og:description", content: "Two portals: SIS for academics, LMS for course content." },
   ]}),
   component: LoginLanding,

@@ -10,7 +10,7 @@ import { useSharedStore, Course, Lesson } from "@/lib/store";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/dashboard/lms")({
-  head: () => ({ meta: [{ title: "LMS Dashboard — KMR Technologies" }] }),
+  head: () => ({ meta: [{ title: "LMS Dashboard — KES Technologies" }] }),
   component: LMSDash,
 });
 
@@ -69,7 +69,7 @@ function LMSDash() {
         <div className="container mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <GraduationCap className="h-6 w-6 text-gold" />
-            <span className="font-extrabold">KMR · LMS</span>
+            <span className="font-extrabold">KES · LMS</span>
           </Link>
           <div className="flex items-center gap-2">
             <DashThemeToggle />

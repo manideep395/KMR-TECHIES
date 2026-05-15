@@ -26,7 +26,7 @@ const CATEGORY_MAP: Record<string, 'courses' | 'certifications' | 'trainings' | 
 };
 
 export const Route = createFileRoute("/enroll/$category/$courseId")({
-  head: () => ({ meta: [{ title: "Enroll — KMR Technologies" }] }),
+  head: () => ({ meta: [{ title: "Enroll — KES Technologies" }] }),
   component: EnrollPage,
 });
 

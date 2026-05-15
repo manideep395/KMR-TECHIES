@@ -15,11 +15,11 @@ export type StoreState = {
 
 const defaultState: StoreState = {
   students: [
-    { id: "KMR-101", name: "Aarav Sharma", program: "B.Tech CSE", cgpa: "8.4", status: "Active", semester: "5" },
-    { id: "KMR-102", name: "K. Manideep", program: "CSE-AI", cgpa: "8.7", status: "Active", semester: "5" },
-    { id: "KMR-103", name: "Priya R.", program: "Full-Stack", cgpa: "9.1", status: "Alumni", semester: "8" },
-    { id: "KMR-104", name: "Arjun M.", program: "Cloud DevOps", cgpa: "8.2", status: "Active", semester: "3" },
-    { id: "KMR-105", name: "Sana K.", program: "Data Analytics", cgpa: "8.9", status: "Alumni", semester: "8" },
+    { id: "KES-101", name: "Aarav Sharma", program: "B.Tech CSE", cgpa: "8.4", status: "Active", semester: "5" },
+    { id: "KES-102", name: "K. Manideep", program: "CSE-AI", cgpa: "8.7", status: "Active", semester: "5" },
+    { id: "KES-103", name: "Priya R.", program: "Full-Stack", cgpa: "9.1", status: "Alumni", semester: "8" },
+    { id: "KES-104", name: "Arjun M.", program: "Cloud DevOps", cgpa: "8.2", status: "Active", semester: "3" },
+    { id: "KES-105", name: "Sana K.", program: "Data Analytics", cgpa: "8.9", status: "Alumni", semester: "8" },
   ],
   courses: [
     {
@@ -78,7 +78,7 @@ const defaultState: StoreState = {
   ],
 };
 
-const STORE_KEY = "kmr_realtime_store";
+const STORE_KEY = "kes_realtime_store";
 
 function getSnapshot(): StoreState {
   if (typeof window === "undefined") return defaultState;

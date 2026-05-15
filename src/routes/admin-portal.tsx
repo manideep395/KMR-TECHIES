@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/admin-portal")({
-  head: () => ({ meta: [{ title: "Admin Portal — KMR Technologies" }] }),
+  head: () => ({ meta: [{ title: "Admin Portal — KES Technologies" }] }),
   component: AdminPortal,
 });
 
@@ -135,13 +135,13 @@ function AdminPortal() {
         <div className="hidden lg:flex bg-gradient-hero text-white p-12 flex-col justify-between">
           <div className="flex items-center gap-2">
             <div className="h-10 w-10 rounded-lg bg-gold grid place-items-center"><UserCog className="h-5 w-5 text-navy-deep" /></div>
-            <div className="font-extrabold">KMR · Admin</div>
+            <div className="font-extrabold">KES · Admin</div>
           </div>
           <div>
             <h2 className="text-4xl font-extrabold leading-tight">Admin Portal</h2>
             <p className="text-white/70 mt-4 max-w-md">Manage courses, certifications, trainings, and students in real-time.</p>
           </div>
-          <div className="text-xs text-white/50">© KMR Technologies</div>
+          <div className="text-xs text-white/50">© KES Technologies</div>
         </div>
         <div className="flex items-center justify-center p-6 lg:p-12">
           <form onSubmit={handleAdminLogin} className="w-full max-w-md bg-card rounded-3xl shadow-elegant p-8 border border-border">
@@ -252,7 +252,7 @@ function AdminPortal() {
         <div className="container mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <UserCog className="h-6 w-6 text-gold" />
-            <span className="font-extrabold">KMR · Admin</span>
+            <span className="font-extrabold">KES · Admin</span>
           </Link>
           <div className="flex items-center gap-2">
             <DashThemeToggle />

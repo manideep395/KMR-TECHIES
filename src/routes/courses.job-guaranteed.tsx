@@ -4,7 +4,7 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/courses/job-guaranteed")({
   head: () => ({ meta: [
-    { title: "Job Guaranteed Courses — KMR Technologies" },
+    { title: "Job Guaranteed Courses — KES Technologies" },
     { name: "description", content: "Placement-backed programs designed with hiring partners — pay after you get a job." },
   ]}),
   component: Page,

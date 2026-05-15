@@ -10,9 +10,9 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({ meta: [
-    { title: "Contact Us — KMR Technologies" },
-    { name: "description", content: "Get in touch with KMR Technologies for admissions, partnerships, and support." },
-    { property: "og:title", content: "Contact KMR Technologies" },
+    { title: "Contact Us — KES Technologies" },
+    { name: "description", content: "Get in touch with KES Technologies for admissions, partnerships, and support." },
+    { property: "og:title", content: "Contact KES Technologies" },
     { property: "og:description", content: "Reach our team for admissions and partnerships." },
   ]}),
   component: ContactPage,
@@ -35,7 +35,7 @@ function ContactPage() {
           {[
             { i: MapPin, t: t("contact.office"), d: "12th Main, HSR Layout, Bengaluru, KA 560102" },
             { i: Phone, t: t("contact.phone"), d: "+91 80 1234 5678" },
-            { i: Mail, t: t("contact.email"), d: "hello@kmrtech.in" },
+            { i: Mail, t: t("contact.email"), d: "hello@kestech.in" },
           ].map((c, i) => (
             <div key={i} className="flex gap-4">
               <div className="h-12 w-12 rounded-xl bg-gold/15 text-gold grid place-items-center shrink-0"><c.i className="h-5 w-5" /></div>

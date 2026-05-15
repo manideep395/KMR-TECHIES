@@ -5,10 +5,10 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/about")({
   head: () => ({ meta: [
-    { title: "About Us — KMR Technologies" },
-    { name: "description", content: "Learn about KMR Technologies' mission to transform lives through training and technology." },
-    { property: "og:title", content: "About KMR Technologies" },
-    { property: "og:description", content: "Our mission, vision, and the team behind KMR." },
+    { title: "About Us — KES Technologies" },
+    { name: "description", content: "Learn about KES Technologies' mission to transform lives through training and technology." },
+    { property: "og:title", content: "About KES Technologies" },
+    { property: "og:description", content: "Our mission, vision, and the team behind KES." },
   ]}),
   component: AboutPage,
 });

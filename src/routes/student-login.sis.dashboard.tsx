@@ -13,7 +13,7 @@ import { DashThemeToggle } from "@/components/site/DashThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/student-login/sis/dashboard")({
-  head: () => ({ meta: [{ title: "SIS Dashboard — KMR Technologies" }, { name: "description", content: "Student dashboard." }] }),
+  head: () => ({ meta: [{ title: "SIS Dashboard — KES Technologies" }, { name: "description", content: "Student dashboard." }] }),
   component: Dash,
 });
 
@@ -70,7 +70,7 @@ function Dash() {
     <div className="min-h-screen bg-secondary">
       <header className="bg-navy-deep text-white sticky top-0 z-40">
         <div className="container mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2"><GraduationCap className="h-6 w-6 text-gold" /><span className="font-extrabold">KMR · SIS</span></Link>
+          <Link to="/" className="flex items-center gap-2"><GraduationCap className="h-6 w-6 text-gold" /><span className="font-extrabold">KES · SIS</span></Link>
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block"><div className="text-sm font-semibold">{user.user_metadata?.full_name || user.email}</div><div className="text-xs text-white/60">{user.id}</div></div>
             <div className="h-9 w-9 rounded-full bg-gold text-navy-deep grid place-items-center font-bold">{(user.user_metadata?.full_name || user.email || "U").charAt(0)}</div>
@@ -253,7 +253,7 @@ function Dash() {
             <Row k="Student ID" v={user.id} />
             <Row k="Program" v="B.Tech CSE" />
             <Row k="Batch" v="2024 – 2028" />
-            <Row k="Email" v={`${displayName.split(" ")[0].toLowerCase()}@kmr.edu`} />
+            <Row k="Email" v={`${displayName.split(" ")[0].toLowerCase()}@kes.edu`} />
             <Row k="Mentor" v="Priya R." />
           </div>
         </DialogContent>
@@ -283,7 +283,7 @@ function Dash() {
       {/* ── ID Card dialog ── */}
       <Dialog open={openAction === "idcard"} onOpenChange={(o) => !o && setOpenAction(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle className="flex items-center gap-2"><IdCard className="h-5 w-5" /> Student ID Card</DialogTitle><DialogDescription>Your official KMR Technologies identity card</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle className="flex items-center gap-2"><IdCard className="h-5 w-5" /> Student ID Card</DialogTitle><DialogDescription>Your official KES Technologies identity card</DialogDescription></DialogHeader>
           <div className="rounded-xl bg-gradient-to-br from-navy to-navy-deep text-white p-5 space-y-3">
             <div className="flex items-center gap-3">
               <div className="h-14 w-14 rounded-full bg-gold text-navy-deep grid place-items-center font-bold text-2xl">{displayName.charAt(0)}</div>

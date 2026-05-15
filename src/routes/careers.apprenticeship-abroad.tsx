@@ -5,7 +5,7 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/careers/apprenticeship-abroad")({
   head: () => ({ meta: [
-    { title: "Apprenticeship Abroad — KMR Technologies" },
+    { title: "Apprenticeship Abroad — KES Technologies" },
     { name: "description", content: "International placement portal — work-and-learn opportunities in Germany, Japan, UAE and more." },
   ]}),
   component: Abroad,

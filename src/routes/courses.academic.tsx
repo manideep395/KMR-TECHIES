@@ -4,7 +4,7 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/courses/academic")({
   head: () => ({ meta: [
-    { title: "Academic Programs — KMR Technologies" },
+    { title: "Academic Programs — KES Technologies" },
     { name: "description", content: "UGC-recognized degree-aligned programs in partnership with universities." },
   ]}),
   component: Page,

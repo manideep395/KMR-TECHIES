@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Briefcase, MapPin, Clock } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
-export const Route = createFileRoute("/careers/kmr")({
+export const Route = createFileRoute("/careers/kes")({
   head: () => ({ meta: [
     { title: "KES Careers — Join Our Team" },
     { name: "description", content: "Open roles at KES Technologies across India." },

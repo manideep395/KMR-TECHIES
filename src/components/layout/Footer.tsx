@@ -19,7 +19,7 @@ export function Footer() {
               className="h-12 w-12 rounded-full object-contain bg-white p-0.5 shadow-md"
             />
             <div>
-              <div className="text-gold font-extrabold">Karthikeya Educational Society</div>
+              <div className="text-gold font-extrabold">Karthikeya Educational Society </div>
               <div className="text-gold text-[10px] font-semibold uppercase tracking-widest"></div>
             </div>
           </div>

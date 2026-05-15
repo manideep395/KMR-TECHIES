@@ -1,82 +1,10 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { ChatBot } from "@/components/site/ChatBot";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 
-/* ── Cursor Glow ── */
-function CursorGlow() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const pos = useRef({ x: -200, y: -200 });
-  const cur = useRef({ x: -200, y: -200 });
-  const raf = useRef<number>(0);
-
-  useEffect(() => {
-    const SIZE_DOT = 12;   // small crisp dot
-    const SIZE_RING = 36;  // soft outer ring
-
-    const onMove = (e: MouseEvent) => {
-      pos.current = { x: e.clientX, y: e.clientY };
-      // Dot snaps instantly to cursor
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${e.clientX - SIZE_DOT / 2}px, ${e.clientY - SIZE_DOT / 2}px)`;
-      }
-    };
-    window.addEventListener("mousemove", onMove);
-
-    // Ring trails with lerp
-    const loop = () => {
-      cur.current.x += (pos.current.x - cur.current.x) * 0.18;
-      cur.current.y += (pos.current.y - cur.current.y) * 0.18;
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate(${cur.current.x - SIZE_RING / 2}px, ${cur.current.y - SIZE_RING / 2}px)`;
-      }
-      raf.current = requestAnimationFrame(loop);
-    };
-    raf.current = requestAnimationFrame(loop);
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      cancelAnimationFrame(raf.current);
-    };
-  }, []);
-
-  return (
-    <>
-      {/* Trailing soft ring */}
-      <div
-        ref={ringRef}
-        aria-hidden="true"
-        className="pointer-events-none fixed top-0 left-0 z-[9998] will-change-transform"
-        style={{
-          width: 36,
-          height: 36,
-          borderRadius: "50%",
-          border: "1.5px solid oklch(0.72 0.22 330 / 0.55)",
-          boxShadow: "0 0 8px 2px oklch(0.72 0.22 330 / 0.18)",
-          background: "transparent",
-        }}
-      />
-      {/* Crisp dot — snaps to cursor exactly */}
-      <div
-        ref={dotRef}
-        aria-hidden="true"
-        className="pointer-events-none fixed top-0 left-0 z-[9999] will-change-transform"
-        style={{
-          width: 12,
-          height: 12,
-          borderRadius: "50%",
-          background: "oklch(0.72 0.22 330)",
-          boxShadow: "0 0 6px 2px oklch(0.72 0.22 330 / 0.6)",
-          mixBlendMode: "difference",
-        }}
-      />
-    </>
-  );
-}
 
 function NotFoundComponent() {
   return (
@@ -156,7 +84,6 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <CursorGlow />
         <Outlet />
         <Toaster richColors position="top-right" />
         {!hideBot && <ChatBot />}

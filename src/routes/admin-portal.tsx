@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FormEvent, useState } from "react";
-import { Users, BookOpen, TrendingUp, Inbox, Search, Plus, Edit, Trash2, Eye, GraduationCap, UserCog, FileUp, IndianRupee, X, Loader2, Lock, Eye as EyeIcon, EyeOff } from "lucide-react";
+import { FormEvent, useState, useEffect } from "react";
+import { Users, BookOpen, TrendingUp, Inbox, Search, Plus, Edit, Trash2, Eye, GraduationCap, UserCog, FileUp, IndianRupee, X, Loader2, Lock, Eye as EyeIcon, EyeOff, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,6 +43,22 @@ function AdminPortal() {
   const { data: academicPrograms, loading: programsLoading } = useRealtimeData<Tables<'academic_programs'>>('academic_programs');
   const { data: careers, loading: careersLoading } = useRealtimeData<Tables<'careers'>>('careers');
   const { data: profiles, loading: profilesLoading } = useRealtimeData<Tables<'profiles'>>('profiles');
+
+  // Enrollment form submissions stored in localStorage
+  const [localEnrollments, setLocalEnrollments] = useState<any[]>([]);
+  useEffect(() => {
+    const load = () => {
+      try {
+        const stored = JSON.parse(localStorage.getItem("kes_enrollments") ?? "[]");
+        setLocalEnrollments(stored);
+      } catch {
+        setLocalEnrollments([]);
+      }
+    };
+    load();
+    const id = setInterval(load, 3000); // poll every 3s for new submissions
+    return () => clearInterval(id);
+  }, []);
 
   if (authLoading || coursesLoading || certsLoading || trainingsLoading || programsLoading || careersLoading || profilesLoading) {
     return (
@@ -210,7 +226,7 @@ function AdminPortal() {
     { i: Users, l: "Total Students", v: profiles.length.toString(), c: "from-cyan-500 to-blue-600" },
     { i: BookOpen, l: "Active Courses", v: (courses.length + certifications.length + trainings.length + academicPrograms.length).toString(), c: "from-magenta to-rose-600" },
     { i: TrendingUp, l: "Open Positions", v: careers.length.toString(), c: "from-emerald-500 to-teal-600" },
-    { i: Inbox, l: "Total Programs", v: academicPrograms.length.toString(), c: "from-amber-500 to-orange-600" },
+    { i: ClipboardList, l: "Enrollments", v: localEnrollments.length.toString(), c: "from-amber-500 to-orange-600" },
   ];
 
   const handleAddItem = async (type: string, data: any) => {
@@ -278,14 +294,64 @@ function AdminPortal() {
           ))}
         </div>
 
-        <Tabs defaultValue="courses" className="bg-card rounded-2xl border border-border p-4">
-          <TabsList className="grid grid-cols-2 md:grid-cols-5 w-full">
+        <Tabs defaultValue="enrollments" className="bg-card rounded-2xl border border-border p-4">
+          <TabsList className="grid grid-cols-2 md:grid-cols-6 w-full">
+            <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="certifications">Certifications</TabsTrigger>
             <TabsTrigger value="trainings">Trainings</TabsTrigger>
             <TabsTrigger value="academic">Academic</TabsTrigger>
             <TabsTrigger value="careers">Careers</TabsTrigger>
           </TabsList>
+
+          {/* ENROLLMENTS */}
+          <TabsContent value="enrollments" className="space-y-4 mt-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-foreground">Course Enrollment Submissions</h3>
+              <span className="px-3 py-1 rounded-full bg-amber-500/15 text-amber-600 text-xs font-bold">{localEnrollments.length} total</span>
+            </div>
+            {localEnrollments.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <ClipboardList className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                <p>No enrollments yet. They will appear here when users click "Enroll Now" on a course.</p>
+              </div>
+            ) : (
+              <div className="border border-border rounded-xl overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>#</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Course</TableHead>
+                      <TableHead>Qualification</TableHead>
+                      <TableHead>Submitted</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {localEnrollments.map((enr: any, idx: number) => (
+                      <TableRow key={idx}>
+                        <TableCell className="font-medium text-muted-foreground">{idx + 1}</TableCell>
+                        <TableCell className="font-semibold">{enr.name}</TableCell>
+                        <TableCell>{enr.email}</TableCell>
+                        <TableCell>{enr.phone}</TableCell>
+                        <TableCell>
+                          <span className="px-2 py-0.5 rounded-full bg-magenta/10 text-magenta text-xs font-bold">
+                            {enr.courseName}
+                          </span>
+                        </TableCell>
+                        <TableCell>{enr.qualification}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">
+                          {new Date(enr.submittedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </TabsContent>
 
           {/* COURSES */}
           <TabsContent value="courses" className="space-y-4 mt-4">

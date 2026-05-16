@@ -19,8 +19,8 @@ export function Footer() {
               className="h-12 w-12 rounded-full object-contain bg-white p-0.5 shadow-md"
             />
             <div>
-              <div className="text-gold font-extrabold">Karthikeya Educational Society </div>
-              <div className="text-gold text-[10px] font-semibold uppercase tracking-widest"></div>
+              <div className="text-blue font-extrabold">KARTHIKEYA</div>
+              <div className="text-orange text-[10px] font-semibold uppercase tracking-widest">Educational Society</div>
             </div>
           </div>
           <p className="text-sm">{t("footer.tagline")}</p>

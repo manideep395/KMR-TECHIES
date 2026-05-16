@@ -118,7 +118,7 @@ export function Header() {
               className="h-10 w-10 rounded-full object-contain bg-white p-0.5 shadow-md"
             />
             <div className="leading-tight">
-              <div className="text-blue font-extrabold text-lg tracking-tight">Karthikeya</div>
+              <div className="text-blue font-extrabold text-lg tracking-tight">KARTHIKEYA</div>
               <div className="text-orange text-[10px] font-semibold uppercase tracking-widest">Educational Society</div>
             </div>
           </Link>

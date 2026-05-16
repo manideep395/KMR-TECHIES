@@ -41,26 +41,29 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.97 0.004 265);
-  --foreground: oklch(0.18 0.05 265);
+  --background: oklch(0.97 0.008 200);
+  --foreground: oklch(0.15 0.05 200);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.05 265);
+  --card-foreground: oklch(0.15 0.05 200);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.05 265);
+  --popover-foreground: oklch(0.15 0.05 200);
 
-  /* Brand colors — fixed across modes */
-  --navy: oklch(0.25 0.07 265);
-  --navy-deep: oklch(0.16 0.06 265);
-  --gold: oklch(0.83 0.16 85);
-  --magenta: oklch(0.62 0.24 350);
+  /* ── KES Logo Brand Colors ──
+     Teal  #0097B2 → oklch(0.60 0.13 210)  — logo figures & "KARTHIKEYA" text
+     Orange #F7941D → oklch(0.78 0.18 55)  — logo arms & "EDUCATIONAL SOCIETY" text
+  */
+  --navy:      oklch(0.38 0.10 210);   /* mid-teal  */
+  --navy-deep: oklch(0.24 0.09 210);   /* deep teal */
+  --gold:      oklch(0.78 0.17 55);    /* KES orange */
+  --magenta:   oklch(0.62 0.15 35);    /* deep amber-orange (CTA accent) */
   --magenta-foreground: oklch(1 0 0);
 
   --primary: var(--gold);
   --primary-foreground: var(--navy-deep);
-  --secondary: oklch(0.955 0.005 265);
-  --secondary-foreground: oklch(0.18 0.05 265);
-  --muted: oklch(0.94 0.005 265);
-  --muted-foreground: oklch(0.46 0.03 265);
+  --secondary: oklch(0.94 0.018 200);
+  --secondary-foreground: oklch(0.15 0.05 200);
+  --muted: oklch(0.93 0.012 200);
+  --muted-foreground: oklch(0.48 0.04 200);
   --accent: var(--gold);
   --accent-foreground: var(--navy-deep);
   --destructive: oklch(0.6 0.24 27);
@@ -70,36 +73,37 @@
   --ring: var(--gold);
 
   /* Semantic heading color — adapts to theme */
-  --heading: oklch(0.2 0.06 265);
+  --heading: oklch(0.18 0.07 210);
 
-  --shadow-elegant: 0 20px 50px -20px oklch(0.3 0.05 265 / 0.12);
-  --gradient-hero: linear-gradient(135deg, oklch(0.22 0.08 265) 0%, oklch(0.3 0.1 280) 60%, oklch(0.4 0.18 340) 100%);
+  --shadow-elegant: 0 20px 50px -20px oklch(0.24 0.09 210 / 0.18);
+  /* Hero gradient: deep teal → teal → warm teal */
+  --gradient-hero: linear-gradient(135deg, oklch(0.20 0.10 210) 0%, oklch(0.32 0.12 205) 55%, oklch(0.42 0.11 195) 100%);
 
   --sidebar: oklch(0.98 0 0);
   --sidebar-foreground: var(--navy);
   --sidebar-primary: var(--navy);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.96 0.01 250);
+  --sidebar-accent: oklch(0.94 0.018 200);
   --sidebar-accent-foreground: var(--navy);
-  --sidebar-border: oklch(0.92 0.01 255);
+  --sidebar-border: oklch(0.90 0.015 205);
   --sidebar-ring: var(--navy);
 }
 
 /* ─── DARK MODE ─── */
 .dark {
-  --background: oklch(0.16 0.05 265);
-  --foreground: oklch(0.97 0.01 250);
-  --card: oklch(0.22 0.06 265);
-  --card-foreground: oklch(0.97 0.01 250);
-  --popover: oklch(0.22 0.06 265);
-  --popover-foreground: oklch(0.97 0.01 250);
+  --background: oklch(0.14 0.06 210);
+  --foreground: oklch(0.97 0.01 200);
+  --card: oklch(0.20 0.07 210);
+  --card-foreground: oklch(0.97 0.01 200);
+  --popover: oklch(0.20 0.07 210);
+  --popover-foreground: oklch(0.97 0.01 200);
 
   --primary: var(--gold);
   --primary-foreground: var(--navy-deep);
-  --secondary: oklch(0.28 0.06 265);
-  --secondary-foreground: oklch(0.97 0.01 250);
-  --muted: oklch(0.26 0.05 265);
-  --muted-foreground: oklch(0.72 0.03 265);
+  --secondary: oklch(0.26 0.08 210);
+  --secondary-foreground: oklch(0.97 0.01 200);
+  --muted: oklch(0.24 0.07 210);
+  --muted-foreground: oklch(0.70 0.04 200);
   --accent: var(--gold);
   --accent-foreground: var(--navy-deep);
   --destructive: oklch(0.6 0.24 27);
@@ -108,9 +112,9 @@
   --input: oklch(1 0 0 / 12%);
   --ring: var(--gold);
 
-  --heading: oklch(0.97 0.01 250);
+  --heading: oklch(0.97 0.01 200);
 
-  --shadow-elegant: 0 20px 50px -20px oklch(0.08 0.04 265 / 0.4);
+  --shadow-elegant: 0 20px 50px -20px oklch(0.08 0.05 210 / 0.45);
 }
 
 /* ─── BASE ─── */

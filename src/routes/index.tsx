@@ -163,10 +163,10 @@ function Home() {
           <p className="text-lg text-white/70 mt-4 max-w-3xl mx-auto">{t("mission.sub")}</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-10 md:mt-12 max-w-4xl mx-auto">
             {[
-              { n: "25k+", l: t("stats.learners") },
+              { n: "5k+", l: t("stats.learners") },
               { n: "150+", l: t("stats.partners") },
               { n: "92%", l: t("stats.placement") },
-              { n: "12 LPA", l: t("stats.ctc") },
+              { n: "10+", l: t("stats.experience") },
             ].map(s => (
               <div key={s.l}>
                 <div className="text-3xl md:text-4xl font-extrabold text-gold">{s.n}</div>

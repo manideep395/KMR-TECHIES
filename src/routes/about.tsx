@@ -32,7 +32,7 @@ function AboutPage() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           {[
-            { i: Users, n: "25k+", l: t("stats.learners") },
+            { i: Users, n: "5k+", l: t("stats.learners") },
             { i: Award, n: "150+", l: t("stats.partners") },
             { i: Target, n: "92%", l: t("stats.placement") },
             { i: Sparkles, n: "40+", l: t("about.stat.programs") },

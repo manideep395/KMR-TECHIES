@@ -113,7 +113,7 @@ function StudentDash() {
             <h2 className="font-bold text-foreground mb-4 flex items-center gap-2"><User className="h-5 w-5" /> {t("dash.profile")}</h2>
             <div className="flex items-center gap-4 mb-4">
               <div className="h-16 w-16 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 grid place-items-center text-white text-xl font-extrabold">
-                {profile.name.split(" ").map(n => n[0]).join("")}
+                {profile.name.split(" ").map((n: string) => n[0]).join("")}
               </div>
               <div>
                 <div className="font-bold text-foreground">{profile.name}</div>

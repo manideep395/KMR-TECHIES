@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { useRealtimeData } from "@/hooks/useRealtimeData";
 import type { Tables } from "@/integrations/supabase/types";
+import { ALL_HARDCODED_COURSES } from "@/data/coursesData";
 
 type Course = Tables<'courses'>;
 type Certification = Tables<'certifications'>;
@@ -37,8 +38,17 @@ function EnrollPage() {
   const tableName = CATEGORY_MAP[category];
   const { data: allCourses } = useRealtimeData<CourseType>(tableName);
   const [course, setCourse] = useState<CourseType | null>(null);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
+    // 1. Try to find the course in hardcoded list first
+    const staticCourse = ALL_HARDCODED_COURSES.find(c => c.id === courseId);
+    if (staticCourse) {
+      setCourse(staticCourse as any);
+      return;
+    }
+
+    // 2. Fallback to database
     if (allCourses && courseId) {
       const found = allCourses.find(c => c.id === courseId);
       setCourse(found || null);
@@ -59,7 +69,6 @@ function EnrollPage() {
   const gst = Math.round(fee * 0.18);
   const total = fee + gst;
   const fmt = (n: number) => n === 0 ? "Free" : `₹${n.toLocaleString("en-IN")}`;
-  const [done, setDone] = useState(false);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();

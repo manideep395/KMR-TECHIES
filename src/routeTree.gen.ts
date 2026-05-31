@@ -27,6 +27,7 @@ import { Route as CareersKesRouteImport } from './routes/careers.kes'
 import { Route as CareersApprenticeshipAbroadRouteImport } from './routes/careers.apprenticeship-abroad'
 import { Route as StudentLoginSisDashboardRouteImport } from './routes/student-login.sis.dashboard'
 import { Route as EnrollCategoryCourseIdRouteImport } from './routes/enroll.$category.$courseId'
+import { Route as CoursesCategoryCourseIdRouteImport } from './routes/courses.$category.$courseId'
 
 const StudentLoginRoute = StudentLoginRouteImport.update({
   id: '/student-login',
@@ -120,6 +121,11 @@ const EnrollCategoryCourseIdRoute = EnrollCategoryCourseIdRouteImport.update({
   path: '/enroll/$category/$courseId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursesCategoryCourseIdRoute = CoursesCategoryCourseIdRouteImport.update({
+  id: '/courses/$category/$courseId',
+  path: '/courses/$category/$courseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/student-login/lms': typeof StudentLoginLmsRoute
   '/student-login/sis': typeof StudentLoginSisRouteWithChildren
   '/student-login/': typeof StudentLoginIndexRoute
+  '/courses/$category/$courseId': typeof CoursesCategoryCourseIdRoute
   '/enroll/$category/$courseId': typeof EnrollCategoryCourseIdRoute
   '/student-login/sis/dashboard': typeof StudentLoginSisDashboardRoute
 }
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/student-login/lms': typeof StudentLoginLmsRoute
   '/student-login/sis': typeof StudentLoginSisRouteWithChildren
   '/student-login': typeof StudentLoginIndexRoute
+  '/courses/$category/$courseId': typeof CoursesCategoryCourseIdRoute
   '/enroll/$category/$courseId': typeof EnrollCategoryCourseIdRoute
   '/student-login/sis/dashboard': typeof StudentLoginSisDashboardRoute
 }
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/student-login/lms': typeof StudentLoginLmsRoute
   '/student-login/sis': typeof StudentLoginSisRouteWithChildren
   '/student-login/': typeof StudentLoginIndexRoute
+  '/courses/$category/$courseId': typeof CoursesCategoryCourseIdRoute
   '/enroll/$category/$courseId': typeof EnrollCategoryCourseIdRoute
   '/student-login/sis/dashboard': typeof StudentLoginSisDashboardRoute
 }
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/student-login/lms'
     | '/student-login/sis'
     | '/student-login/'
+    | '/courses/$category/$courseId'
     | '/enroll/$category/$courseId'
     | '/student-login/sis/dashboard'
   fileRoutesByTo: FileRoutesByTo
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/student-login/lms'
     | '/student-login/sis'
     | '/student-login'
+    | '/courses/$category/$courseId'
     | '/enroll/$category/$courseId'
     | '/student-login/sis/dashboard'
   id:
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/student-login/lms'
     | '/student-login/sis'
     | '/student-login/'
+    | '/courses/$category/$courseId'
     | '/enroll/$category/$courseId'
     | '/student-login/sis/dashboard'
   fileRoutesById: FileRoutesById
@@ -257,6 +269,7 @@ export interface RootRouteChildren {
   CoursesJobGuaranteedRoute: typeof CoursesJobGuaranteedRoute
   DashboardLmsRoute: typeof DashboardLmsRoute
   DashboardStudentRoute: typeof DashboardStudentRoute
+  CoursesCategoryCourseIdRoute: typeof CoursesCategoryCourseIdRoute
   EnrollCategoryCourseIdRoute: typeof EnrollCategoryCourseIdRoute
 }
 
@@ -388,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnrollCategoryCourseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courses/$category/$courseId': {
+      id: '/courses/$category/$courseId'
+      path: '/courses/$category/$courseId'
+      fullPath: '/courses/$category/$courseId'
+      preLoaderRoute: typeof CoursesCategoryCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -433,6 +453,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesJobGuaranteedRoute: CoursesJobGuaranteedRoute,
   DashboardLmsRoute: DashboardLmsRoute,
   DashboardStudentRoute: DashboardStudentRoute,
+  CoursesCategoryCourseIdRoute: CoursesCategoryCourseIdRoute,
   EnrollCategoryCourseIdRoute: EnrollCategoryCourseIdRoute,
 }
 export const routeTree = rootRouteImport

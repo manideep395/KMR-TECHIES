@@ -4,8 +4,8 @@ import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/courses/govt-sponsored")({
   head: () => ({ meta: [
-    { title: "Govt Sponsored Training — KES Technologies" },
-    { name: "description", content: "Skill India and state-sponsored programs at little to no cost." },
+    { title: "Skill Development Training — KES Technologies" },
+    { name: "description", content: "Government and foundation sponsored skill development training programs." },
   ]}),
   component: Page,
 });

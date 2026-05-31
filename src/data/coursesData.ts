@@ -32,8 +32,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
     price: 0,
     image_url: null,
     level: "Beginner / Foundation",
-    provider: "Ratna Foundation",
-    description: "This course focuses on developing effective communication for personal, educational, and professional success. Learners gain knowledge in verbal, non-verbal, and written communication, along with listening skills and confidence-building for both formal and informal settings. Provided by Ratna Foundation.",
+    description: "This course focuses on developing effective communication for personal, educational, and professional success. Learners gain knowledge in verbal, non-verbal, and written communication, along with listening skills and confidence-building for both formal and informal settings.",
     skills_covered: ["Public Speaking", "Presentation", "Business Email Writing", "Active Listening", "Body Language"],
     modules: [
       {
@@ -95,7 +94,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
       "Client Relations Executive"
     ],
     eligibility: "Open to all rural and semi-urban youth (Minimum 10th standard education).",
-    certificationText: "Government-aligned Skill India Certificate in Professional Communication (Issued in partnership with Ratna Foundation)."
+    certificationText: "Government-aligned Skill India Certificate in Professional Communication."
   },
   {
     id: "govt-english-basics",
@@ -105,8 +104,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
     price: 0,
     image_url: null,
     level: "Beginner / Foundation",
-    provider: "Ratna Foundation",
-    description: "Designed for rural and semi-urban youth, this course introduces learners to the basics of spoken and written English. It covers everyday vocabulary, grammar, sentence formation, and conversational skills to improve confidence in using English in daily life and workplaces. Provided by Ratna Foundation.",
+    description: "Designed for rural and semi-urban youth, this course introduces learners to the basics of spoken and written English. It covers everyday vocabulary, grammar, sentence formation, and conversational skills to improve confidence in using English in daily life and workplaces.",
     skills_covered: ["Basic Grammar", "Everyday Vocabulary", "Sentence Construction", "Speaking Confidence"],
     modules: [
       {
@@ -168,7 +166,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
       "Data Entry Operator"
     ],
     eligibility: "Basic literacy (able to read and write in native regional language).",
-    certificationText: "Basic English Proficiency Certificate (Issued in partnership with Ratna Foundation)."
+    certificationText: "Basic English Proficiency Certificate."
   },
   {
     id: "govt-digital-literacy",
@@ -178,8 +176,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
     price: 0,
     image_url: null,
     level: "Beginner",
-    provider: "Ratna Foundation",
-    description: "This course equips learners with essential knowledge to navigate the digital world. Modules include using computers and smartphones, online transactions, communication through social media, and cyber safety best practices, enabling rural youth to become digitally empowered and future-ready. Provided by Ratna Foundation.",
+    description: "This course equips learners with essential knowledge to navigate the digital world. Modules include using computers and smartphones, online transactions, communication through social media, and cyber safety best practices, enabling rural youth to become digitally empowered and future-ready.",
     skills_covered: ["Computer Basics", "MS Office", "Internet Browsing", "Digital Payments", "Online Safety"],
     modules: [
       {
@@ -241,7 +238,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
       "E-Seva/Digital Assistant"
     ],
     eligibility: "Open to school-goers, dropouts, or graduates (10th pass preferred).",
-    certificationText: "National-aligned Digital Literacy Certificate (Issued in partnership with Ratna Foundation)."
+    certificationText: "National-aligned Digital Literacy Certificate."
   }
 ];
 
@@ -508,8 +505,7 @@ export const HARDCODED_CERTIFICATION_COURSES: DetailedCourse[] = [
     price: 0,
     image_url: null,
     level: "Intermediate",
-    provider: "Ratna Foundation",
-    description: "Learn the essentials of SEO, social media marketing, email marketing, and e-commerce platform management. Designed by Ratna Foundation to help rural entrepreneurs and youth start and scale online businesses.",
+    description: "Learn the essentials of SEO, social media marketing, email marketing, and e-commerce platform management. Designed to help rural entrepreneurs and youth start and scale online businesses.",
     skills_covered: ["SEO Basics", "Social Media Marketing", "Email Marketing", "Paid Advertising", "E-commerce Store Management"],
     modules: [
       {
@@ -572,7 +568,7 @@ export const HARDCODED_CERTIFICATION_COURSES: DetailedCourse[] = [
       "Freelance Online Consultant"
     ],
     eligibility: "Basic internet handling and digital literacy skills required.",
-    certificationText: "Certified Digital Marketing & E-Commerce Executive (Issued by Ratna Foundation)."
+    certificationText: "Certified Digital Marketing & E-Commerce Executive."
   },
   {
     id: "cert-healthcare-assistant",
@@ -582,8 +578,7 @@ export const HARDCODED_CERTIFICATION_COURSES: DetailedCourse[] = [
     price: 0,
     image_url: null,
     level: "Beginner / Intermediate",
-    provider: "Ratna Foundation",
-    description: "Comprehensive healthcare training covering patient care, basic nursing protocols, communication, and medical emergency responses. Certified by Ratna Foundation with hospital placement assistance.",
+    description: "Comprehensive healthcare training covering patient care, basic nursing protocols, communication, and medical emergency responses. Includes hospital placement assistance.",
     skills_covered: ["Patient Care", "Vital Signs", "First Aid & CPR", "Hospital Protocols", "Infection Control"],
     modules: [
       {
@@ -654,7 +649,7 @@ export const HARDCODED_CERTIFICATION_COURSES: DetailedCourse[] = [
       "Medical Clinic Front Desk & Assistant"
     ],
     eligibility: "Class 10th or 12th pass. Age eligibility requirements apply.",
-    certificationText: "Healthcare GDA Professional Vocational Certificate (Partner: Ratna Foundation)."
+    certificationText: "Healthcare GDA Professional Vocational Certificate."
   },
   {
     id: "cert-agri-tech",
@@ -664,7 +659,6 @@ export const HARDCODED_CERTIFICATION_COURSES: DetailedCourse[] = [
     price: 0,
     image_url: null,
     level: "Intermediate",
-    provider: "Ratna Foundation",
     description: "Master modern farming techniques, organic agriculture, soil management, micro-irrigation, and agricultural marketing. Empowering farmers and rural youth with sustainable agri-business skills.",
     skills_covered: ["Organic Farming", "Micro-irrigation Systems", "Soil Health Management", "Hydroponics", "Agricultural Marketing & Subsidies"],
     modules: [
@@ -737,7 +731,7 @@ export const HARDCODED_CERTIFICATION_COURSES: DetailedCourse[] = [
       "Farmer Producer Organization (FPO) Manager"
     ],
     eligibility: "Open to farming family members, youth, and entrepreneurs (No formal degree limit).",
-    certificationText: "Modern Agricultural Specialist and Agri-Business Developer Certificate (Partner: Ratna Foundation)."
+    certificationText: "Modern Agricultural Specialist and Agri-Business Developer Certificate."
   }
 ];
 

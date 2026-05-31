@@ -51,12 +51,195 @@ function saveEnrollment(data: {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
 }
 
+const HARDCODED_GOVT_COURSES: Item[] = [
+  {
+    id: "govt-comm-skills",
+    title: "Communication Skills",
+    description: "This course focuses on developing effective communication for personal, educational, and professional success. Learners gain knowledge in verbal, non-verbal, and written communication, along with listening skills and confidence-building for both formal and informal settings. Provided by Ratna Foundation.",
+    category: "govt-sponsored",
+    duration: "30 Hours",
+    price: 0,
+    image_url: null,
+    syllabus: null,
+    prerequisites: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "govt-english-basics",
+    title: "English Skills Basics for Beginners",
+    description: "Designed for rural and semi-urban youth, this course introduces learners to the basics of spoken and written English. It covers everyday vocabulary, grammar, sentence formation, and conversational skills to improve confidence in using English in daily life and workplaces. Provided by Ratna Foundation.",
+    category: "govt-sponsored",
+    duration: "30 Hours",
+    price: 0,
+    image_url: null,
+    syllabus: null,
+    prerequisites: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "govt-digital-literacy",
+    title: "Digital Literacy for Rural Youth",
+    description: "This course equips learners with essential knowledge to navigate the digital world. Modules include using computers and smartphones, online transactions, communication through social media, and cyber safety best practices, enabling rural youth to become digitally empowered and future-ready. Provided by Ratna Foundation.",
+    category: "govt-sponsored",
+    duration: "30 Hours",
+    price: 0,
+    image_url: null,
+    syllabus: null,
+    prerequisites: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any
+];
+
+const HARDCODED_JOB_GUARANTEED_COURSES: Item[] = [
+  {
+    id: "job-fullstack",
+    title: "Full-Stack Web Development (MERN)",
+    description: "Master front-end and back-end development with MongoDB, Express, React, and Node.js. Build 15+ real-world projects and secure a guaranteed job as a Software Engineer. Includes 1-on-1 mentor support and interview prep.",
+    category: "job-guaranteed",
+    duration: "24 Weeks",
+    price: 75000,
+    image_url: null,
+    syllabus: null,
+    prerequisites: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "job-datascience",
+    title: "Data Science & AI Engineering",
+    description: "Learn Python, SQL, machine learning algorithms, deep learning, and AI application development. Designed in collaboration with industry leaders to guarantee your placement as a Data Analyst, Data Engineer, or ML Specialist.",
+    category: "job-guaranteed",
+    duration: "28 Weeks",
+    price: 85000,
+    image_url: null,
+    syllabus: null,
+    prerequisites: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "job-devops",
+    title: "Cloud & DevOps Engineering",
+    description: "Master AWS, Docker, Kubernetes, CI/CD pipelines, and infrastructure as code (Terraform). Get hands-on cloud credits and 1-on-1 mentorship to transition into a Cloud Architect or DevOps Engineer role with 100% placement assurance.",
+    category: "job-guaranteed",
+    duration: "20 Weeks",
+    price: 90000,
+    image_url: null,
+    syllabus: null,
+    prerequisites: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any
+];
+
+const HARDCODED_CERTIFICATION_COURSES: Item[] = [
+  {
+    id: "cert-digi-marketing",
+    title: "Digital Marketing & E-Commerce",
+    description: "Learn the essentials of SEO, social media marketing, email marketing, and e-commerce platform management. Designed by Ratna Foundation to help rural entrepreneurs and youth start and scale online businesses.",
+    provider: "Ratna Foundation",
+    duration: "6 Weeks",
+    price: 0,
+    image_url: null,
+    skills_covered: ["SEO", "Social Media", "Email Marketing", "E-commerce"],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "cert-healthcare-assistant",
+    title: "Healthcare Assistant (General Duty Assistant)",
+    description: "Comprehensive healthcare training covering patient care, basic nursing protocols, communication, and medical emergency responses. Certified by Ratna Foundation with hospital placement assistance.",
+    provider: "Ratna Foundation",
+    duration: "12 Weeks",
+    price: 0,
+    image_url: null,
+    skills_covered: ["Patient Care", "First Aid", "Nursing Protocols", "Sanitation"],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "cert-agri-tech",
+    title: "Modern Agricultural Technology & Agri-business",
+    description: "Master modern farming techniques, organic agriculture, soil management, micro-irrigation, and agricultural marketing. Empowering farmers and rural youth with sustainable agri-business skills.",
+    provider: "Ratna Foundation",
+    duration: "8 Weeks",
+    price: 0,
+    image_url: null,
+    skills_covered: ["Modern Farming", "Organic Agriculture", "Agri-business", "Irrigation"],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any
+];
+
+const HARDCODED_ACADEMIC_PROGRAMS: Item[] = [
+  {
+    id: "acad-btech-cse",
+    title: "B.Tech in Computer Science & Engineering (AI & ML)",
+    description: "A UGC-recognized 4-year undergraduate degree program co-designed with top university partners. Learn algorithms, data structures, cloud systems, machine learning, and deep learning with guaranteed industry placement support.",
+    level: "Bachelor's Degree",
+    duration: "4 Years",
+    price: 180000,
+    image_url: null,
+    curriculum: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "acad-mca",
+    title: "Master of Computer Applications (MCA)",
+    description: "UGC-recognized postgraduate program specializing in Cloud Computing, Big Data Analytics, and Software Architecture. Includes hands-on labs, university exams, and placement preparation.",
+    level: "Master's Degree",
+    duration: "2 Years",
+    price: 95000,
+    image_url: null,
+    curriculum: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any,
+  {
+    id: "acad-mtech-se",
+    title: "M.Tech in Software Engineering & DevOps",
+    description: "Advanced postgraduate degree focusing on large-scale software engineering, distributed systems, DevOps practices, and enterprise cloud architecture. Ideal for working professionals looking to upskill.",
+    level: "Master's Degree",
+    duration: "2 Years",
+    price: 110000,
+    image_url: null,
+    curriculum: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as any
+];
+
 export function CourseListPage({ title, tag, intro, category, slug }: CourseListPageProps) {
   const { t } = useT();
-  const { data: items, loading, error } = useRealtimeData<Item>(category);
+  const { data: rawItems, loading, error } = useRealtimeData<Item>(category);
   const [enrollingFor, setEnrollingFor] = useState<Item | null>(null);
   const [done, setDone] = useState(false);
   const [form, setForm] = useState<EnrollForm>({ name: "", email: "", phone: "", qualification: "", notes: "" });
+
+  // Filter and append/prepend hardcoded courses
+  let items = rawItems || [];
+  if (category === 'courses') {
+    items = rawItems.filter(item => 'category' in item && item.category === slug);
+  }
+  if (slug === 'govt-sponsored') {
+    items = [...HARDCODED_GOVT_COURSES, ...items];
+  } else if (slug === 'job-guaranteed') {
+    items = [...HARDCODED_JOB_GUARANTEED_COURSES, ...items];
+  } else if (slug === 'certification') {
+    items = [...HARDCODED_CERTIFICATION_COURSES, ...items];
+  } else if (slug === 'academic') {
+    items = [...HARDCODED_ACADEMIC_PROGRAMS, ...items];
+  }
+
+  // If there's an error but we have hardcoded courses to show, don't block the UI entirely
+  const shouldShowError = error && (
+    (slug !== 'govt-sponsored' && slug !== 'job-guaranteed' && slug !== 'certification' && slug !== 'academic') || 
+    items.length === 0
+  );
 
   function openEnroll(item: Item) {
     setEnrollingFor(item);
@@ -105,7 +288,7 @@ export function CourseListPage({ title, tag, intro, category, slug }: CourseList
     );
   }
 
-  if (error) {
+  if (shouldShowError) {
     return (
       <SiteLayout>
         <section className="py-16 bg-background">
@@ -135,7 +318,7 @@ export function CourseListPage({ title, tag, intro, category, slug }: CourseList
               <div className="flex items-start justify-between gap-3 mb-3">
                 <h3 className="text-xl font-bold text-foreground">{item.title}</h3>
                 <span className="px-3 py-1 rounded-full bg-magenta/10 text-magenta text-xs font-bold whitespace-nowrap">
-                  {item.price ? `₹${item.price}` : 'Contact for pricing'}
+                  {item.price === 0 ? 'Free' : item.price ? `₹${item.price}` : 'Contact for pricing'}
                 </span>
               </div>
               <div className="flex gap-4 text-xs text-muted-foreground mb-4">

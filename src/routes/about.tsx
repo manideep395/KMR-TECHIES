@@ -7,7 +7,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({ meta: [
     { title: "About Us — KES Technologies" },
     { name: "description", content: "Learn about KES Technologies' mission to transform lives through training and technology." },
-    { property: "og:title", content: "About KES Technologies" },
+    { property: "og:title", content: "About Karthikeya Educational Society" },
     { property: "og:description", content: "Our mission, vision, and the team behind KES." },
   ]}),
   component: AboutPage,

@@ -25,7 +25,7 @@ export interface DetailedCourse {
 
 export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
   {
-    id: "govt-comm-skills",
+    id: "skill-comm-skills",
     title: "Communication Skills",
     category: "skill-development",
     duration: "30 Hours",
@@ -97,7 +97,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
     certificationText: "Government-aligned Skill India Certificate in Professional Communication."
   },
   {
-    id: "govt-english-basics",
+    id: "skill-english-basics",
     title: "English Skills Basics for Beginners",
     category: "skill-development",
     duration: "30 Hours",
@@ -169,7 +169,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
     certificationText: "Basic English Proficiency Certificate."
   },
   {
-    id: "govt-digital-literacy",
+    id: "skill-digital-literacy",
     title: "Digital Literacy for Rural Youth",
     category: "skill-development",
     duration: "30 Hours",

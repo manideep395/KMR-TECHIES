@@ -21,7 +21,7 @@ type CourseType = Course | Certification | Training | AcademicProgram;
 
 const CATEGORY_MAP: Record<string, 'courses' | 'certifications' | 'trainings' | 'academic_programs'> = {
   "job-guaranteed": "courses",
-  "govt-sponsored": "courses",
+  "skill-development": "courses",
   "certification": "certifications",
   "academic": "academic_programs",
 };

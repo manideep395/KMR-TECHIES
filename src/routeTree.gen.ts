@@ -19,8 +19,8 @@ import { Route as StudentLoginSisRouteImport } from './routes/student-login.sis'
 import { Route as StudentLoginLmsRouteImport } from './routes/student-login.lms'
 import { Route as DashboardStudentRouteImport } from './routes/dashboard.student'
 import { Route as DashboardLmsRouteImport } from './routes/dashboard.lms'
+import { Route as CoursesSkillDevelopmentRouteImport } from './routes/courses.skill-development'
 import { Route as CoursesJobGuaranteedRouteImport } from './routes/courses.job-guaranteed'
-import { Route as CoursesGovtSponsoredRouteImport } from './routes/courses.govt-sponsored'
 import { Route as CoursesCertificationRouteImport } from './routes/courses.certification'
 import { Route as CoursesAcademicRouteImport } from './routes/courses.academic'
 import { Route as CareersKesRouteImport } from './routes/careers.kes'
@@ -79,14 +79,14 @@ const DashboardLmsRoute = DashboardLmsRouteImport.update({
   path: '/dashboard/lms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursesSkillDevelopmentRoute = CoursesSkillDevelopmentRouteImport.update({
+  id: '/courses/skill-development',
+  path: '/courses/skill-development',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesJobGuaranteedRoute = CoursesJobGuaranteedRouteImport.update({
   id: '/courses/job-guaranteed',
   path: '/courses/job-guaranteed',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CoursesGovtSponsoredRoute = CoursesGovtSponsoredRouteImport.update({
-  id: '/courses/govt-sponsored',
-  path: '/courses/govt-sponsored',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesCertificationRoute = CoursesCertificationRouteImport.update({
@@ -137,8 +137,8 @@ export interface FileRoutesByFullPath {
   '/careers/kes': typeof CareersKesRoute
   '/courses/academic': typeof CoursesAcademicRoute
   '/courses/certification': typeof CoursesCertificationRoute
-  '/courses/govt-sponsored': typeof CoursesGovtSponsoredRoute
   '/courses/job-guaranteed': typeof CoursesJobGuaranteedRoute
+  '/courses/skill-development': typeof CoursesSkillDevelopmentRoute
   '/dashboard/lms': typeof DashboardLmsRoute
   '/dashboard/student': typeof DashboardStudentRoute
   '/student-login/lms': typeof StudentLoginLmsRoute
@@ -157,8 +157,8 @@ export interface FileRoutesByTo {
   '/careers/kes': typeof CareersKesRoute
   '/courses/academic': typeof CoursesAcademicRoute
   '/courses/certification': typeof CoursesCertificationRoute
-  '/courses/govt-sponsored': typeof CoursesGovtSponsoredRoute
   '/courses/job-guaranteed': typeof CoursesJobGuaranteedRoute
+  '/courses/skill-development': typeof CoursesSkillDevelopmentRoute
   '/dashboard/lms': typeof DashboardLmsRoute
   '/dashboard/student': typeof DashboardStudentRoute
   '/student-login/lms': typeof StudentLoginLmsRoute
@@ -179,8 +179,8 @@ export interface FileRoutesById {
   '/careers/kes': typeof CareersKesRoute
   '/courses/academic': typeof CoursesAcademicRoute
   '/courses/certification': typeof CoursesCertificationRoute
-  '/courses/govt-sponsored': typeof CoursesGovtSponsoredRoute
   '/courses/job-guaranteed': typeof CoursesJobGuaranteedRoute
+  '/courses/skill-development': typeof CoursesSkillDevelopmentRoute
   '/dashboard/lms': typeof DashboardLmsRoute
   '/dashboard/student': typeof DashboardStudentRoute
   '/student-login/lms': typeof StudentLoginLmsRoute
@@ -202,8 +202,8 @@ export interface FileRouteTypes {
     | '/careers/kes'
     | '/courses/academic'
     | '/courses/certification'
-    | '/courses/govt-sponsored'
     | '/courses/job-guaranteed'
+    | '/courses/skill-development'
     | '/dashboard/lms'
     | '/dashboard/student'
     | '/student-login/lms'
@@ -222,8 +222,8 @@ export interface FileRouteTypes {
     | '/careers/kes'
     | '/courses/academic'
     | '/courses/certification'
-    | '/courses/govt-sponsored'
     | '/courses/job-guaranteed'
+    | '/courses/skill-development'
     | '/dashboard/lms'
     | '/dashboard/student'
     | '/student-login/lms'
@@ -243,8 +243,8 @@ export interface FileRouteTypes {
     | '/careers/kes'
     | '/courses/academic'
     | '/courses/certification'
-    | '/courses/govt-sponsored'
     | '/courses/job-guaranteed'
+    | '/courses/skill-development'
     | '/dashboard/lms'
     | '/dashboard/student'
     | '/student-login/lms'
@@ -265,8 +265,8 @@ export interface RootRouteChildren {
   CareersKesRoute: typeof CareersKesRoute
   CoursesAcademicRoute: typeof CoursesAcademicRoute
   CoursesCertificationRoute: typeof CoursesCertificationRoute
-  CoursesGovtSponsoredRoute: typeof CoursesGovtSponsoredRoute
   CoursesJobGuaranteedRoute: typeof CoursesJobGuaranteedRoute
+  CoursesSkillDevelopmentRoute: typeof CoursesSkillDevelopmentRoute
   DashboardLmsRoute: typeof DashboardLmsRoute
   DashboardStudentRoute: typeof DashboardStudentRoute
   CoursesCategoryCourseIdRoute: typeof CoursesCategoryCourseIdRoute
@@ -345,18 +345,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardLmsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courses/skill-development': {
+      id: '/courses/skill-development'
+      path: '/courses/skill-development'
+      fullPath: '/courses/skill-development'
+      preLoaderRoute: typeof CoursesSkillDevelopmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/job-guaranteed': {
       id: '/courses/job-guaranteed'
       path: '/courses/job-guaranteed'
       fullPath: '/courses/job-guaranteed'
       preLoaderRoute: typeof CoursesJobGuaranteedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/courses/govt-sponsored': {
-      id: '/courses/govt-sponsored'
-      path: '/courses/govt-sponsored'
-      fullPath: '/courses/govt-sponsored'
-      preLoaderRoute: typeof CoursesGovtSponsoredRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/certification': {
@@ -449,8 +449,8 @@ const rootRouteChildren: RootRouteChildren = {
   CareersKesRoute: CareersKesRoute,
   CoursesAcademicRoute: CoursesAcademicRoute,
   CoursesCertificationRoute: CoursesCertificationRoute,
-  CoursesGovtSponsoredRoute: CoursesGovtSponsoredRoute,
   CoursesJobGuaranteedRoute: CoursesJobGuaranteedRoute,
+  CoursesSkillDevelopmentRoute: CoursesSkillDevelopmentRoute,
   DashboardLmsRoute: DashboardLmsRoute,
   DashboardStudentRoute: DashboardStudentRoute,
   CoursesCategoryCourseIdRoute: CoursesCategoryCourseIdRoute,

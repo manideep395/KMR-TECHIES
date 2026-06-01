@@ -229,7 +229,7 @@ function Home() {
           <div className="grid md:grid-cols-2 gap-5">
             {[
               { to: "/courses/job-guaranteed", icon: Briefcase, title: t("programs.jobg.title"), desc: t("programs.jobg.desc"), cta: t("programs.explore") },
-              { to: "/courses/govt-sponsored", icon: Building2, title: t("programs.govt.title"), desc: t("programs.govt.desc"), cta: t("programs.explore") },
+              { to: "/courses/skill-development", icon: Building2, title: t("programs.govt.title"), desc: t("programs.govt.desc"), cta: t("programs.explore") },
               { to: "/courses/certification", icon: Award, title: t("programs.cert.title"), desc: t("programs.cert.desc"), cta: t("programs.explore") },
               { to: "/courses/academic", icon: Award, title: t("programs.acad.title"), desc: t("programs.acad.desc"), cta: t("programs.view") },
             ].map((p) => (

@@ -6,7 +6,7 @@ export interface CourseModule {
 export interface DetailedCourse {
   id: string;
   title: string;
-  category: string; // e.g. "govt-sponsored", "job-guaranteed", "certification", "academic"
+  category: string; // e.g. "skill-development", "job-guaranteed", "certification", "academic"
   duration: string;
   price: number;
   image_url: string | null;
@@ -27,7 +27,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
   {
     id: "govt-comm-skills",
     title: "Communication Skills",
-    category: "govt-sponsored",
+    category: "skill-development",
     duration: "30 Hours",
     price: 0,
     image_url: null,
@@ -99,7 +99,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
   {
     id: "govt-english-basics",
     title: "English Skills Basics for Beginners",
-    category: "govt-sponsored",
+    category: "skill-development",
     duration: "30 Hours",
     price: 0,
     image_url: null,
@@ -171,7 +171,7 @@ export const HARDCODED_GOVT_COURSES: DetailedCourse[] = [
   {
     id: "govt-digital-literacy",
     title: "Digital Literacy for Rural Youth",
-    category: "govt-sponsored",
+    category: "skill-development",
     duration: "30 Hours",
     price: 0,
     image_url: null,

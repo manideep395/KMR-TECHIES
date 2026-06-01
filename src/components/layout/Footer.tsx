@@ -34,7 +34,7 @@ export function Footer() {
           <h4 className="text-white font-semibold mb-4">{t("footer.courses")}</h4>
           <ul className="space-y-2 text-sm">
             <li><Link to="/courses/job-guaranteed" className="hover:text-gold">{t("courses.jobGuaranteed")}</Link></li>
-            <li><Link to="/courses/govt-sponsored" className="hover:text-gold">{t("courses.govt")}</Link></li>
+            <li><Link to="/courses/skill-development" className="hover:text-gold">{t("courses.govt")}</Link></li>
             <li><Link to="/courses/certification" className="hover:text-gold">{t("courses.cert")}</Link></li>
             <li><Link to="/courses/academic" className="hover:text-gold">{t("courses.academic")}</Link></li>
           </ul>

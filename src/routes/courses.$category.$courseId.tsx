@@ -29,21 +29,21 @@ type CourseType = Tables<'courses'> | Tables<'certifications'> | Tables<'trainin
 
 const CATEGORY_MAP: Record<string, 'courses' | 'certifications' | 'trainings' | 'academic_programs'> = {
   "job-guaranteed": "courses",
-  "govt-sponsored": "courses",
+  "skill-development": "courses",
   "certification": "certifications",
   "academic": "academic_programs",
 };
 
 const CATEGORY_LABEL_MAP: Record<string, string> = {
   "job-guaranteed": "Job Guaranteed Program",
-  "govt-sponsored": "Skill Development Training",
+  "skill-development": "Skill Development Training",
   "certification": "Professional Certification",
   "academic": "Academic Degree Program",
 };
 
 const CATEGORY_ROUTER_MAP: Record<string, any> = {
   "job-guaranteed": "/courses/job-guaranteed",
-  "govt-sponsored": "/courses/govt-sponsored",
+  "skill-development": "/courses/skill-development",
   "certification": "/courses/certification",
   "academic": "/courses/academic",
 };

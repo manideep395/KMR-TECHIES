@@ -98,7 +98,7 @@ export function Header() {
 
   const courseItems = [
     { title: t("courses.jobGuaranteed"), desc: t("courses.jobGuaranteed.desc"), icon: Briefcase, to: "/courses/job-guaranteed" },
-    { title: t("courses.govt"), desc: t("courses.govt.desc"), icon: Building2, to: "/courses/govt-sponsored" },
+    { title: t("courses.govt"), desc: t("courses.govt.desc"), icon: Building2, to: "/courses/skill-development" },
     { title: t("courses.cert"), desc: t("courses.cert.desc"), icon: Award, to: "/courses/certification" },
     { title: t("courses.academic"), desc: t("courses.academic.desc"), icon: BookOpen, to: "/courses/academic" },
   ];

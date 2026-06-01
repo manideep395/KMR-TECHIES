@@ -72,7 +72,7 @@ export function CourseListPage({ title, tag, intro, category, slug }: CourseList
   if (category === 'courses') {
     items = rawItems.filter(item => 'category' in item && item.category === slug);
   }
-  if (slug === 'govt-sponsored') {
+  if (slug === 'skill-development') {
     items = [...HARDCODED_GOVT_COURSES, ...items];
   } else if (slug === 'job-guaranteed') {
     items = [...HARDCODED_JOB_GUARANTEED_COURSES, ...items];
@@ -84,7 +84,7 @@ export function CourseListPage({ title, tag, intro, category, slug }: CourseList
 
   // If there's an error but we have hardcoded courses to show, don't block the UI entirely
   const shouldShowError = error && (
-    (slug !== 'govt-sponsored' && slug !== 'job-guaranteed' && slug !== 'certification' && slug !== 'academic') || 
+    (slug !== 'skill-development' && slug !== 'job-guaranteed' && slug !== 'certification' && slug !== 'academic') || 
     items.length === 0
   );
 

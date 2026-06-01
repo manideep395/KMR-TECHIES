@@ -6,7 +6,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <Header />
-      <main className="flex-1 overflow-hidden">{children}</main>
+      <main className="flex-1 overflow-hidden pt-16 lg:pt-20">{children}</main>
       <Footer />
     </div>
   );

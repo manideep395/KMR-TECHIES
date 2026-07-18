@@ -318,6 +318,17 @@ const en: Dict = {
   "lf.sub.sis": "Track attendance, view marks, pay fees, and stay updated — all from one secure dashboard.",
   "lf.headline.lms": "Learn anywhere, anytime.",
   "lf.sub.lms": "Pick up where you left off across videos, labs, and live sessions.",
+  "lf.fullName": "Full Name",
+  "lf.email": "Email Address",
+  "lf.sisRegisterTitle": "Register for SIS",
+  "lf.sisRegisterSub": "Create a student information system account.",
+  "lf.lmsRegisterTitle": "Register for LMS",
+  "lf.lmsRegisterSub": "Create a learning management system account.",
+  "lf.signingUp": "Signing up...",
+  "lf.signUp": "Sign up",
+  "lf.createAccount": "Create an account",
+  "lf.alreadyHaveAccount": "Already have an account? Sign in",
+  "lf.signupSuccess": "Signup successful!",
 };
 
 // Translation helper: provides shared structure

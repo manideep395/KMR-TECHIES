@@ -26,6 +26,7 @@ function AdminPortal() {
   const [q, setQ] = useState("");
   const [editItem, setEditItem] = useState<any | null>(null);
   const [newItem, setNewItem] = useState<{ type: string; data: any } | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ type: string; id: string } | null>(null);
 
   // Admin login form state
   const [adminEmail, setAdminEmail] = useState("");
@@ -252,7 +253,6 @@ function AdminPortal() {
   };
 
   const handleDeleteItem = async (type: string, id: string) => {
-    if (!confirm("Are you sure you want to delete this item?")) return;
     try {
       const { error } = await (supabase.from(type as any) as any).delete().eq('id', id);
       if (error) throw error;
@@ -397,7 +397,7 @@ function AdminPortal() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteItem('courses', course.id)}
+                            onClick={() => setDeleteConfirm({ type: 'courses', id: course.id })}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -454,7 +454,7 @@ function AdminPortal() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteItem('certifications', cert.id)}
+                            onClick={() => setDeleteConfirm({ type: 'certifications', id: cert.id })}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -511,7 +511,7 @@ function AdminPortal() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteItem('trainings', training.id)}
+                            onClick={() => setDeleteConfirm({ type: 'trainings', id: training.id })}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -568,7 +568,7 @@ function AdminPortal() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteItem('academic_programs', program.id)}
+                            onClick={() => setDeleteConfirm({ type: 'academic_programs', id: program.id })}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -625,7 +625,7 @@ function AdminPortal() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteItem('careers', career.id)}
+                            onClick={() => setDeleteConfirm({ type: 'careers', id: career.id })}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -706,6 +706,33 @@ function AdminPortal() {
                 onClick={() => newItem && handleAddItem(newItem.type, newItem.data)}
               >
                 Add Item
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground my-4">
+              Are you sure you want to delete this item? This action cannot be undone.
+            </p>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+              <Button
+                variant="destructive"
+                className="bg-red-600 hover:bg-red-700 text-white font-bold"
+                onClick={async () => {
+                  if (deleteConfirm) {
+                    await handleDeleteItem(deleteConfirm.type, deleteConfirm.id);
+                    setDeleteConfirm(null);
+                  }
+                }}
+              >
+                Delete
               </Button>
             </DialogFooter>
           </DialogContent>
